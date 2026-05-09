@@ -5,10 +5,12 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 
 public static class Shared
 {
+    public static readonly CombustionResult PatchedResultMethaneOxygen = new CombustionResult(1, 2, new CombustionValue[] { new(GasType.CarbonDioxide, 1), new(GasType.Steam, 2) });
+
     public static readonly CombustionResult[,] PatchedData = new CombustionResult[4, 4]
     {
         {
-            new CombustionResult(1, 2, new CombustionValue[] { new(GasType.CarbonDioxide, 1), new(GasType.Steam, 2) }),
+            PatchedResultMethaneOxygen,
             Combustion.ResultMethaneNitrous,
             Combustion.ResultMethaneOzone,
             null
