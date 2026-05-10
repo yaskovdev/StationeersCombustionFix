@@ -11,6 +11,8 @@ public class CombustPatch
     private static bool Prefix(double combustionRatio, out MoleQuantity burnedFuel, out float cleanBurnRatio, ref GasMixture __instance, ref MoleEnergy __result)
     {
         Plugin.Logger?.LogInfo($"Calling {nameof(GasMixture.Combust)}");
+        Plugin.Logger?.LogInfo($"Methane before combustion: {__instance.Methane.Quantity.ToDouble()}");
+        Plugin.Logger?.LogInfo($"Oxygen before combustion: {__instance.Oxygen.Quantity.ToDouble()}");
         burnedFuel = MoleQuantity.Zero;
         cleanBurnRatio = 1f;
         MoleEnergy zero = MoleEnergy.Zero;
@@ -221,6 +223,7 @@ public class CombustPatch
             {
                 if (quantity8 > MoleQuantity.Zero)
                 {
+                    // TODO: __instance.Methane.Remove(removedMoles31) most likely doesn't remove methane fully, therefore it leaks to the atmosphere
                     MoleEnergy combustionEnergy;
                     MoleQuantity combustedFuel;
                     float cleanBurnRatio3;
@@ -534,6 +537,8 @@ public class CombustPatch
             }
         }
         __instance.Add(newGasMix);
+        Plugin.Logger?.LogInfo($"Methane after combustion: {__instance.Methane.Quantity.ToDouble()}");
+        Plugin.Logger?.LogInfo($"Oxygen after combustion: {__instance.Oxygen.Quantity.ToDouble()}");
         __result = zero;
         return false;
     }

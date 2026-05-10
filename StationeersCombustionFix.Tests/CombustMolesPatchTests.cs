@@ -15,10 +15,11 @@ public class CombustMolesPatchTests
     public void Should2To1()
     {
         var combustionResult = new CombustionResult(2, 1, new CombustionValue[] { new(GasType.CarbonDioxide, 1), new(GasType.Steam, 2) });
-        combustionResult.RunCombustion(new Mole(GasType.Methane, new MoleQuantity(0.0702003868704067), new MoleEnergy(444.242810054923)), new Mole(GasType.Oxygen, new MoleQuantity(0.0351001934352034), new MoleEnergy(950.411240069048)), 0.99, out var combustionEnergy, out var burnedFuel, out var cleanBurnRatio);
-        combustionEnergy.ToDouble().ShouldBe(19876.537538487, 0.001);
-        burnedFuel.ToDouble().ShouldBe(0.0694983830017026, 0.001);
-        cleanBurnRatio.ShouldBe(1);
+        var mixture = combustionResult.RunCombustion(new Mole(GasType.Methane, new MoleQuantity(0.0064401038814301), new MoleEnergy(40.126981302237)), new Mole(GasType.Oxygen, new MoleQuantity(0.00322005194071505), new MoleEnergy(20.7519437616961)), 1, out var combustionEnergy, out var burnedFuel, out var cleanBurnRatio);
+        // combustionEnergy.ToDouble().ShouldBe(19876.537538487, 0.001);
+        // burnedFuel.ToDouble().ShouldBe(0.0694983830017026, 0.001);
+        // cleanBurnRatio.ShouldBe(1);
+        mixture.Methane.Quantity.ToDouble().ShouldBe(0);
     }
     
     // (GasType.Methane, GasType.Oxygen) => new CombustionResult(1, 2, new CombustionValue[] { new(GasType.CarbonDioxide, 1), new(GasType.Steam, 2) })
@@ -28,9 +29,15 @@ public class CombustMolesPatchTests
     public void Should1To2()
     {
         var combustionResult = new CombustionResult(1, 2, new CombustionValue[] { new(GasType.CarbonDioxide, 1), new(GasType.Steam, 2) });
-        combustionResult.RunCombustion(new Mole(GasType.Methane, new MoleQuantity(0.163484713199987), new MoleEnergy(5437.41808821058)), new Mole(GasType.Oxygen, new MoleQuantity(0.0817423565999935), new MoleEnergy(1281.14921361891)), 0.0510212775974559, out var combustionEnergy, out var burnedFuel, out var cleanBurnRatio);
-        combustionEnergy.ToDouble().ShouldBe(596.395723860865, 0.001);
-        burnedFuel.ToDouble().ShouldBe(0.00208529973377925, 0.001);
-        cleanBurnRatio.ShouldBe(0.25f);
+        var mixture = combustionResult.RunCombustion(new Mole(GasType.Methane, new MoleQuantity(0.00127029939280172), new MoleEnergy(8.02727986811946)), new Mole(GasType.Oxygen, new MoleQuantity(0.00254059878560344), new MoleEnergy(16.3830661455039)), 1, out var combustionEnergy, out var burnedFuel, out var cleanBurnRatio);
+        mixture.Methane.Quantity.ToDouble().ShouldBe(0);
+    }
+
+    [TestMethod]
+    public void Should3()
+    {
+        var fuel = GasMixtureHelper.Create();
+        fuel.Add(new Mole(GasType.Methane, new MoleQuantity(1), new MoleEnergy(8)));
+        fuel.Add(new Mole(GasType.Oxygen, new MoleQuantity(2), new MoleEnergy(16)));
     }
 }

@@ -13,9 +13,15 @@ internal class CombustMolesPatch
         CombustionResult result = !fuel.IsValid || !oxidiser.IsValid ? CombustionResult.Invalid : Shared.PatchedData[Combustion.FuelIndex(fuel.Type), Combustion.OxidiserIndex(oxidiser.Type)];
         if (CombustionResult.IsValid(result))
         {
-            Plugin.Logger?.LogInfo($"Running combustion with fuel ({fuel.Type}, {fuel.Quantity.ToDouble()}, {fuel.Energy.ToDouble()}), oxidiser ({oxidiser.Type}, {oxidiser.Quantity.ToDouble()}, {oxidiser.Energy.ToDouble()}), ratio {combustionRatio}");
-            __result = result.RunCombustion(fuel, oxidiser, combustionRatio, out combustionEnergy, out combustedFuel, out cleanBurnRatio);
-            Plugin.Logger?.LogInfo($"Run combustion, got {combustionEnergy.ToDouble()}, {combustedFuel.ToDouble()}, {cleanBurnRatio}");
+            // TODO: forcing ratio 1
+            Plugin.Logger?.LogInfo($"Running combustion with fuel ({fuel.Type}, {fuel.Quantity.ToDouble()}, {fuel.Energy.ToDouble()}), oxidiser ({oxidiser.Type}, {oxidiser.Quantity.ToDouble()}, {oxidiser.Energy.ToDouble()}), combustion ratio {combustionRatio}");
+            if (combustionRatio < 1)
+            {
+                Plugin.Logger?.LogInfo($"Combustion ratio was {combustionRatio}, forcing 1");
+            }
+            var mixture = result.RunCombustion(fuel, oxidiser, combustionRatio: 1, out combustionEnergy, out combustedFuel, out cleanBurnRatio);
+            __result = mixture;
+            Plugin.Logger?.LogInfo($"Run combustion, got mixture: {mixture.DebugPrint()}, combustion energy: {combustionEnergy.ToDouble()}, combusted fuel: {combustedFuel.ToDouble()}, clean burn ratio: {cleanBurnRatio}");
             return false;
         }
         GasMixture gasMixture = GasMixtureHelper.Create();
