@@ -19,7 +19,7 @@ internal class TryGetResultPrefixPatch
             __result = false;
             return false;
         }
-        result = Shared.PatchedData[Combustion.FuelIndex(fuelType), Combustion.OxidiserIndex(oxidiserType)];
+        result = Shared.DataPatch[Combustion.FuelIndex(fuelType), Combustion.OxidiserIndex(oxidiserType)];
         __result = result.IsValid();
         return false;
     }

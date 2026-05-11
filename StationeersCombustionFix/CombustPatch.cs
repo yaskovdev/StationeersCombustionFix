@@ -77,8 +77,8 @@ public class CombustPatch
             double num9 = moleQuantity1.ToDouble();
             double num10 = (quantity12 / totalOxidiser).ToDouble();
             double num11 = (quantity13 / totalOxidiser).ToDouble();
-            MoleQuantity moleQuantity2 = quantity3 * Shared.PatchedResultMethaneOxygen.OxidiserRatio;
-            MoleQuantity moleQuantity3 = quantity4 * Shared.PatchedResultMethaneOxygen.OxidiserRatio;
+            MoleQuantity moleQuantity2 = quantity3 * Shared.ResultMethaneOxygenPatch.OxidiserRatio;
+            MoleQuantity moleQuantity3 = quantity4 * Shared.ResultMethaneOxygenPatch.OxidiserRatio;
             MoleQuantity moleQuantity4 = quantity5 * Combustion.ResultHydrogenOxygen.OxidiserRatio;
             MoleQuantity moleQuantity5 = quantity6 * Combustion.ResultHydrogenOxygen.OxidiserRatio;
             MoleQuantity moleQuantity6 = quantity7 * Combustion.ResultAlcoholOxygen.OxidiserRatio;
@@ -89,8 +89,8 @@ public class CombustPatch
             MoleQuantity removedMoles3 = moleQuantity4 * moleQuantity8;
             MoleQuantity removedMoles4 = moleQuantity5 * moleQuantity8;
             MoleQuantity removedMoles5 = moleQuantity6 * moleQuantity8;
-            MoleQuantity moleQuantity9 = quantity3 * Shared.PatchedResultMethaneOxygen.OxidiserRatio;
-            MoleQuantity moleQuantity10 = quantity4 * Shared.PatchedResultMethaneOxygen.OxidiserRatio;
+            MoleQuantity moleQuantity9 = quantity3 * Shared.ResultMethaneOxygenPatch.OxidiserRatio;
+            MoleQuantity moleQuantity10 = quantity4 * Shared.ResultMethaneOxygenPatch.OxidiserRatio;
             MoleQuantity moleQuantity11 = quantity5 * Combustion.ResultHydrogenOxygen.OxidiserRatio;
             MoleQuantity moleQuantity12 = quantity6 * Combustion.ResultHydrogenOxygen.OxidiserRatio;
             MoleQuantity moleQuantity13 = quantity7 * Combustion.ResultAlcoholOxygen.OxidiserRatio;
@@ -149,8 +149,8 @@ public class CombustPatch
             MoleQuantity removedMoles28 = moleQuantity39 * moleQuantity43;
             MoleQuantity removedMoles29 = moleQuantity40 * moleQuantity43;
             MoleQuantity removedMoles30 = moleQuantity41 * moleQuantity43;
-            MoleQuantity moleQuantity44 = removedMoles1 * Shared.PatchedResultMethaneOxygen.FuelRatio;
-            MoleQuantity moleQuantity45 = removedMoles6 * Shared.PatchedResultMethaneOxygen.FuelRatio;
+            MoleQuantity moleQuantity44 = removedMoles1 * Shared.ResultMethaneOxygenPatch.FuelRatio;
+            MoleQuantity moleQuantity45 = removedMoles6 * Shared.ResultMethaneOxygenPatch.FuelRatio;
             MoleQuantity moleQuantity46 = removedMoles11 * Combustion.ResultMethaneNitrous.FuelRatio;
             MoleQuantity moleQuantity47 = removedMoles16 * Combustion.ResultMethaneNitrous.FuelRatio;
             MoleQuantity moleQuantity48 = removedMoles21 * Combustion.ResultMethaneOzone.FuelRatio;
@@ -163,8 +163,8 @@ public class CombustPatch
             MoleQuantity removedMoles34 = moleQuantity47 * moleQuantity51;
             MoleQuantity removedMoles35 = moleQuantity48 * moleQuantity51;
             MoleQuantity removedMoles36 = moleQuantity49 * moleQuantity51;
-            MoleQuantity moleQuantity52 = removedMoles2 * Shared.PatchedResultMethaneOxygen.FuelRatio;
-            MoleQuantity moleQuantity53 = removedMoles7 * Shared.PatchedResultMethaneOxygen.FuelRatio;
+            MoleQuantity moleQuantity52 = removedMoles2 * Shared.ResultMethaneOxygenPatch.FuelRatio;
+            MoleQuantity moleQuantity53 = removedMoles7 * Shared.ResultMethaneOxygenPatch.FuelRatio;
             MoleQuantity moleQuantity54 = removedMoles12 * Combustion.ResultMethaneNitrous.FuelRatio;
             MoleQuantity moleQuantity55 = removedMoles17 * Combustion.ResultMethaneNitrous.FuelRatio;
             MoleQuantity moleQuantity56 = removedMoles22 * Combustion.ResultMethaneOzone.FuelRatio;

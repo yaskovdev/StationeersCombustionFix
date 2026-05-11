@@ -13,7 +13,7 @@ internal class TryGetResultsPrefixPatch
     {
         Plugin.Logger?.LogInfo($"Calling {nameof(Combustion.TryGetResults)}");
         results = (List<CombustionResult>)null;
-        CombustionResult[,] data = Shared.PatchedData;
+        CombustionResult[,] data = Shared.DataPatch;
         int upperBound1 = data.GetUpperBound(0);
         int upperBound2 = data.GetUpperBound(1);
         for (int lowerBound1 = data.GetLowerBound(0); lowerBound1 <= upperBound1; ++lowerBound1)
