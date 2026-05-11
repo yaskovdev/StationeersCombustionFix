@@ -10,8 +10,12 @@ internal static class CombustionResultPatch
     // ReSharper disable once InconsistentNaming, since Harmony relies on the argument name to access the original instance 
     private static void Postfix(CombustionResult __instance)
     {
-        Plugin.Logger?.LogInfo($"Called constructor with instance: {__instance}");
-        if (__instance.Outputs.Length == 2 && __instance.Outputs[0].GasType == GasType.Pollutant && __instance.Outputs[1].GasType == GasType.CarbonDioxide)
+        Plugin.Logger?.LogInfo($"Constructed instance: {__instance}");
+        if (IsMatch(__instance.FuelMoleCount, 2.0)
+            && IsMatch(__instance.OxidiserMoleCount, 1.0)
+            && __instance.Outputs.Length == 2
+            && IsMatch(__instance.Outputs[0], GasType.Pollutant, 3.0)
+            && IsMatch(__instance.Outputs[1], GasType.CarbonDioxide, 6.0))
         {
             Plugin.Logger?.LogInfo($"{nameof(CombustionResult)} is {nameof(GasType.Pollutant)} and {nameof(GasType.CarbonDioxide)}, replacing it with {GasType.CarbonDioxide} and {GasType.Steam}");
             AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelMoleCount)).SetValue(__instance, new MoleQuantity(1.0));
@@ -22,4 +26,8 @@ internal static class CombustionResultPatch
             Plugin.Logger?.LogInfo($"Replaced {nameof(CombustionResult)} with {GasType.CarbonDioxide} and {GasType.Steam}");
         }
     }
+
+    private static bool IsMatch(CombustionValue value, GasType gasType, double quantity) => value.GasType == gasType && IsMatch(value.Quantity, quantity);
+
+    private static bool IsMatch(MoleQuantity value, double quantity) => new MoleQuantity(quantity).Equals(value);
 }
