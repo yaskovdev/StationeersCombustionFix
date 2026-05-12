@@ -29,4 +29,4 @@ The project requires a reference to `Assembly-CSharp.dll` from your local Statio
 2. Create an empty `GameData` folder in the new folder.
 3. Copy the `About` folder to the new folder.
 4. Copy the `StationeersCombustionFix.dll` to the new folder.
-5. Run Stationeers, then go to Workshop. You'll see the mode and the Publish button.
+5. Run Stationeers, then go to Workshop. You'll see the mod and the Publish button.
