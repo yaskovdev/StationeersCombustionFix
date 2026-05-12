@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetadata xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Stationeers Combustion Fix</Name>
+  <Author>yaskovdev</Author>
+  <Version>1.0.0</Version>
+  <Description>Fixes the incorrect methane combustion reaction:
+
+    2 CH4 + O2 -&gt; 6 CO2 + 3 POL
+
+    by replacing it with the chemically accurate reaction:
+
+    CH4 + 2 O2 -&gt; CO2 + 2 H2O
+
+	Notes:
+    - Avoids the welder leftover-methane issue.
+	- Only changes methane + oxygen combustion.
+
+    Recommended fuel mixture:
+    - 33% methane
+    - 67% oxygen
+
+    GitHub repository: https://github.com/yaskovdev/StationeersCombustionFix
+  </Description>
+  <ChangeLog xsi:nil="true" />
+  <WorkshopHandle>3724908136</WorkshopHandle>
+  <Tags />
+  <InGameDescription xsi:nil="true" />
+</ModMetadata>
