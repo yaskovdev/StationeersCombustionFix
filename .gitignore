@@ -1,3 +1,6 @@
+# Local developer configuration (contains machine-specific game path)
+Directory.Build.props
+
 # Rider
 **/.idea
 
