@@ -8,7 +8,7 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 internal static class CombustionResultPatch
 {
     // ReSharper disable once InconsistentNaming, since Harmony relies on the argument name to access the original instance 
-    private static void Postfix(CombustionResult __instance)
+    internal static void Postfix(CombustionResult __instance)
     {
         Plugin.Logger?.LogInfo($"Constructed instance: {__instance}");
         if (IsMatch(__instance.FuelMoleCount, 2.0)

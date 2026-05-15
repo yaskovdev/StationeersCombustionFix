@@ -16,7 +16,6 @@
         <PackageReference Include="MSTest.TestFramework" Version="2.2.10"/>
         <PackageReference Include="NSubstitute" Version="5.3.0"/>
         <PackageReference Include="Shouldly" Version="4.3.0"/>
-        <PackageReference Include="UnityEngine.Modules" Version="2021.3.33"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -24,6 +23,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Reference Include="UnityEngine">
+            <HintPath>$(GameDir)/rocketstation_Data/Managed/UnityEngine.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>$(GameDir)/rocketstation_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
         <Reference Include="Assembly-CSharp">
             <HintPath>$(GameDir)/rocketstation_Data/Managed/Assembly-CSharp.dll</HintPath>
         </Reference>
