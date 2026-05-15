@@ -15,6 +15,6 @@ public class Plugin : BaseUnityPlugin
         var harmony = new Harmony("com.yaskovdev.stationeerscombustionfix");
         harmony.PatchAll(typeof(Plugin).Assembly);
         Logger = base.Logger;
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
     }
 }
