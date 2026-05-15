@@ -34,6 +34,11 @@
         </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="$(GameDir)/rocketstation_Data/Managed/UnityEngine.dll" Link="UnityEngine.dll" CopyToOutputDirectory="PreserveNewest"/>
+        <None Include="$(GameDir)/rocketstation_Data/Managed/UnityEngine.CoreModule.dll" Link="UnityEngine.CoreModule.dll" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
