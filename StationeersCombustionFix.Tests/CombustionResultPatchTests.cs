@@ -23,7 +23,7 @@ public class CombustionResultPatchTests
     }
 
     [TestMethod]
-    public void ShouldPatchMethaneNitrousResult()
+    public void ShouldNotPatchOtherResults()
     {
         ImmutableList
             .Create(Combustion.ResultMethaneNitrous, Combustion.ResultMethaneNitrous, Combustion.ResultMethaneOzone, Combustion.ResultHydrogenOxygen, Combustion.ResultHydrogenNitrous, Combustion.ResultHydrogenOzone, Combustion.ResultAlcoholOxygen, Combustion.ResultAlcoholNitrous, Combustion.ResultAlcoholOzone, Combustion.ResultHydrazine)
