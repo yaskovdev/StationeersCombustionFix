@@ -12,12 +12,12 @@ public class CombustionResultPatchTests
     [TestMethod]
     public void ShouldPatchMethaneOxygenResult()
     {
-        var result = new CombustionResult(2.0, 1.0, [new CombustionValue(GasType.Pollutant, 3.0), new CombustionValue(GasType.CarbonDioxide, 6.0)]);
+        var result = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0) });
         result.ShouldBeEquivalentTo(Combustion.ResultMethaneOxygen);
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(2.0));
-        result.Outputs.ShouldBe([new CombustionValue(GasType.CarbonDioxide, 1.0), new CombustionValue(GasType.Steam, 2.0)]);
+        result.Outputs.ShouldBe(new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
         result.OxidiserRatio.ShouldBe(new MoleQuantity(2.0));
         result.FuelRatio.ShouldBe(new MoleQuantity(0.5));
     }
