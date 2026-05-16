@@ -12,6 +12,8 @@ If welding releases methane into the atmosphere, make sure the oxygen proportion
 
 The project requires a reference to `Assembly-CSharp.dll` from your local Stationeers installation. This file is not included in the repository.
 
+Running unit tests additionally requires `UnityEngine.dll` and `UnityEngine.CoreModule.dll` from your local Stationeers installation.
+
 1. Copy `Directory.Build.props.example` to `Directory.Build.props` (in the repository root):
    ```
    cp Directory.Build.props.example Directory.Build.props
