@@ -2,7 +2,7 @@
 <ModMetadata xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Stationeers Methane Combustion Fix</Name>
   <Author>yaskovdev</Author>
-  <Version>1.0.0</Version>
+  <Version>1.0.1</Version>
   <Description>Fixes the incorrect methane combustion reaction:
 
 2 CH4 + O2 -> 6 CO2 + 3 POL
