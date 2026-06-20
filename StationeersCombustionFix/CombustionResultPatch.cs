@@ -16,11 +16,7 @@ internal static class CombustionResultPatch
             && CombustionValueExtensions.Equals(__instance.Outputs, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0) }))
         {
             Plugin.Logger?.LogInfo($"{nameof(CombustionResult)} is {nameof(GasType.Pollutant)} and {nameof(GasType.CarbonDioxide)}, replacing it with {GasType.CarbonDioxide} and {GasType.Steam}");
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelMoleCount)).SetValue(__instance, new MoleQuantity(1.0));
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserMoleCount)).SetValue(__instance, new MoleQuantity(2.0));
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.Outputs)).SetValue(__instance, new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserRatio)).SetValue(__instance, __instance.OxidiserMoleCount / __instance.FuelMoleCount);
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelRatio)).SetValue(__instance, __instance.FuelMoleCount / __instance.OxidiserMoleCount);
+            Patch(__instance, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
             Plugin.Logger?.LogInfo($"Replaced {nameof(CombustionResult)} with 1 {GasType.CarbonDioxide} and 2 {GasType.Steam}");
         }
         else if (MoleQuantityExtensions.Equals(__instance.FuelMoleCount, 3.0)
@@ -28,12 +24,17 @@ internal static class CombustionResultPatch
                  && CombustionValueExtensions.Equals(__instance.Outputs, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) }))
         {
             Plugin.Logger?.LogInfo($"{nameof(CombustionResult)} is {nameof(GasType.Pollutant)}, {nameof(GasType.CarbonDioxide)} and {nameof(GasType.Steam)}, replacing it with {GasType.CarbonDioxide} and {GasType.Steam}");
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelMoleCount)).SetValue(__instance, new MoleQuantity(3.0));
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserMoleCount)).SetValue(__instance, new MoleQuantity(4.0));
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.Outputs)).SetValue(__instance, new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserRatio)).SetValue(__instance, __instance.OxidiserMoleCount / __instance.FuelMoleCount);
-            AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelRatio)).SetValue(__instance, __instance.FuelMoleCount / __instance.OxidiserMoleCount);
+            Patch(__instance, new MoleQuantity(3.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
             Plugin.Logger?.LogInfo($"Replaced {nameof(CombustionResult)} with 3 {GasType.CarbonDioxide} and 6 {GasType.Steam}");
         }
+    }
+
+    private static void Patch(CombustionResult combustionResult, MoleQuantity fuelMoleCount, MoleQuantity oxidiserMoleCount, CombustionValue[] outputs)
+    {
+        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelMoleCount)).SetValue(combustionResult, fuelMoleCount);
+        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserMoleCount)).SetValue(combustionResult, oxidiserMoleCount);
+        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserRatio)).SetValue(combustionResult, combustionResult.OxidiserMoleCount / combustionResult.FuelMoleCount);
+        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelRatio)).SetValue(combustionResult, combustionResult.FuelMoleCount / combustionResult.OxidiserMoleCount);
+        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.Outputs)).SetValue(combustionResult, outputs);
     }
 }
