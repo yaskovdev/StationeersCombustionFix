@@ -3,7 +3,13 @@
   <Name>Stationeers Methane Combustion Fix</Name>
   <Author>yaskovdev</Author>
   <Version>1.0.1</Version>
-  <Description>Fixes the incorrect methane combustion reaction:
+  <Description>This mod is a BepInEx plugin.
+It requires BepInEx with the StationeersLaunchPad plugin to be installed.
+See the detailed guide at: https://github.com/StationeersLaunchPad/StationeersLaunchPad
+
+[h1]Stationeers Methane Combustion Fix[/h1]
+
+Fixes the incorrect methane combustion reaction:
 
 2 CH4 + O2 -> 6 CO2 + 3 POL
 
