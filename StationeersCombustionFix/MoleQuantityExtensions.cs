@@ -4,7 +4,7 @@ using Assets.Scripts.Atmospherics;
 
 public static class MoleQuantityExtensions
 {
-    public static bool Equals(this MoleQuantity value, MoleQuantity quantity) => Equals(value, quantity.ToDouble());
+    public static bool Is(this MoleQuantity value, MoleQuantity quantity) => value.Is(quantity.ToDouble());
 
-    public static bool Equals(this MoleQuantity value, double quantity) => value.ToDouble().Equals(quantity);
+    public static bool Is(this MoleQuantity value, double quantity) => value.ToDouble().Equals(quantity);
 }

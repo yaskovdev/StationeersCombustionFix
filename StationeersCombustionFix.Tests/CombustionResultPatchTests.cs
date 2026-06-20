@@ -39,7 +39,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchOtherResults()
     {
         ImmutableList
-            .Create(Combustion.ResultMethaneNitrous, Combustion.ResultMethaneNitrous, Combustion.ResultHydrogenOxygen, Combustion.ResultHydrogenNitrous, Combustion.ResultHydrogenOzone, Combustion.ResultAlcoholOxygen, Combustion.ResultAlcoholNitrous, Combustion.ResultAlcoholOzone, Combustion.ResultHydrazine)
+            .Create(Combustion.ResultMethaneNitrous, Combustion.ResultHydrogenOxygen, Combustion.ResultHydrogenNitrous, Combustion.ResultHydrogenOzone, Combustion.ResultAlcoholOxygen, Combustion.ResultAlcoholNitrous, Combustion.ResultAlcoholOzone, Combustion.ResultHydrazine)
             .ForEach(result =>
             {
                 var originalFuelMoleCount = result.FuelMoleCount;
