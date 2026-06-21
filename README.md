@@ -14,6 +14,23 @@ This mod is a BepInEx plugin. It requires BepInEx with the [StationeersLaunchPad
 
 BepInEx only loads plugins from its own `BepInEx/plugins` folder, while subscribed Workshop mods live in Steam's workshop content folder. StationeersLaunchPad is the loader that bridges the two: it discovers the subscribed mod and hands its assembly to BepInEx. Without a loader, a subscribed-only mod is downloaded but never loaded.
 
+## Installing the Mod (for Developers)
+
+Before building, make sure there are no conflicting copies of the mod:
+
+1. Unsubscribe from the mod in Steam Workshop (if subscribed).
+2. Verify there is no `StationeersCombustionFix.dll` in `<GameDir>\BepInEx\plugins\` (where `<GameDir>` is your Stationeers installation path, e.g. `C:\Program Files (x86)\Steam\steamapps\common\Stationeers`).
+
+Then run the build script:
+
+```powershell
+.\Build-Plugin.ps1
+```
+
+This builds the plugin in Release configuration and deploys it (along with the `About` folder) to `Documents\My Games\Stationeers\mods\StationeersCombustionFix\`.
+
+Launch the game. StationeersLaunchPad will pick up the mod automatically.
+
 ## Installing the Mod (for Players)
 
 1. Install BepInEx with the StationeersLaunchPad plugin (see the [StationeersLaunchPad](https://github.com/StationeersLaunchPad/StationeersLaunchPad) guide).
