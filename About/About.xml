@@ -40,7 +40,9 @@ With the correct reaction:
 
 Recommended fuel mixture: 42% methane, 58% ozone.
 
-Disabled by default. Enable in the StationeersLaunchPad configuration window or in BepInEx/config/StationeersCombustionFix.cfg (BepInEx is located in the game folder, e.g. C:\Program Files (x86)\Steam\steamapps\common\Stationeers).
+[b]Disabled by default.[/b] Enable in the StationeersLaunchPad configuration window or in BepInEx/config/StationeersCombustionFix.cfg (BepInEx is located in the game folder, e.g. C:\Program Files (x86)\Steam\steamapps\common\Stationeers).
+
+[h2]Feedback[/h2]
 
 Contributions, improvements, suggestions, and comments are welcome.
 
