@@ -2,7 +2,7 @@
 
 Fixes incorrect methane combustion reactions to be chemically accurate.
 
-![Stationeers Combustion Fix](Image.png)
+![Stationeers Combustion Fix](About/Preview.png)
 
 ## Methane + Oxygen
 
