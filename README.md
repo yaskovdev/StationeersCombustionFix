@@ -6,7 +6,7 @@ Fixes incorrect methane combustion reactions to be chemically accurate.
 
 ## Methane + Oxygen
 
-Replaces the incorrect reaction `2 CH₄ + O2 → 6 CO₂ + 3 POL` with the correct reaction `CH₄ + 2 O₂ → CO₂ + 2 H₂O`.
+Replaces the incorrect reaction `2 CH₄ + O₂ → 6 CO₂ + 3 POL` with the correct reaction `CH₄ + 2 O₂ → CO₂ + 2 H₂O`.
 
 Recommended fuel mixture: 33% methane, 67% oxygen.
 
@@ -16,7 +16,7 @@ Always enabled.
 
 Replaces the incorrect reaction `3 CH₄ + 2 O₃ → 6 CO₂ + 3 POL + H₂O` with the correct reaction `3 CH₄ + 4 O₃ → 3 CO₂ + 6 H₂O`.
 
-Recommended fuel mixture: 43% methane, 57% ozone.
+Recommended fuel mixture: 42% methane, 58% ozone.
 
 Disabled by default. Enable in the StationeersLaunchPad configuration window or in `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` (where `<GameDir>` is the game folder, e.g. `C:\Program Files (x86)\Steam\steamapps\common\Stationeers`).
 
