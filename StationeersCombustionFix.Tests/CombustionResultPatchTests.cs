@@ -9,6 +9,9 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 [TestClass]
 public class CombustionResultPatchTests
 {
+    [TestInitialize]
+    public void ResetConfig() => CombustionResultPatch.PatchMethaneOzoneReaction = () => false;
+
     [TestMethod]
     public void ShouldPatchMethaneOxygenResult()
     {
@@ -23,8 +26,9 @@ public class CombustionResultPatchTests
     }
 
     [TestMethod]
-    public void ShouldPatchMethaneOzoneResult()
+    public void ShouldPatchMethaneOzoneResultWhenEnabled()
     {
+        CombustionResultPatch.PatchMethaneOzoneReaction = () => true;
         var result = new CombustionResult(3.0, 2.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) });
         result.ShouldBeEquivalentTo(Combustion.ResultMethaneOzone);
         CombustionResultPatch.Postfix(result);
@@ -36,8 +40,27 @@ public class CombustionResultPatchTests
     }
 
     [TestMethod]
+    public void ShouldNotPatchMethaneOzoneResultWhenDisabled()
+    {
+        var result = new CombustionResult(3.0, 2.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultMethaneOzone);
+        var originalFuelMoleCount = result.FuelMoleCount;
+        var originalOxidiserMoleCount = result.OxidiserMoleCount;
+        var originalOutputs = result.Outputs;
+        var originalOxidiserRatio = result.OxidiserRatio;
+        var originalFuelRatio = result.FuelRatio;
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
+        result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
+        result.Outputs.ShouldBe(originalOutputs);
+        result.OxidiserRatio.ShouldBe(originalOxidiserRatio);
+        result.FuelRatio.ShouldBe(originalFuelRatio);
+    }
+
+    [TestMethod]
     public void ShouldNotPatchOtherResults()
     {
+        CombustionResultPatch.PatchMethaneOzoneReaction = () => true;
         ImmutableList
             .Create(Combustion.ResultMethaneNitrous, Combustion.ResultHydrogenOxygen, Combustion.ResultHydrogenNitrous, Combustion.ResultHydrogenOzone, Combustion.ResultAlcoholOxygen, Combustion.ResultAlcoholNitrous, Combustion.ResultAlcoholOzone, Combustion.ResultHydrazine)
             .ForEach(result =>

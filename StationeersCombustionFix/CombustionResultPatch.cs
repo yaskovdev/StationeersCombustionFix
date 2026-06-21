@@ -1,5 +1,6 @@
 ﻿namespace StationeersCombustionFix;
 
+using System;
 using Assets.Scripts.Atmospherics;
 using HarmonyLib;
 using static Assets.Scripts.Atmospherics.Chemistry;
@@ -7,6 +8,12 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 [HarmonyPatch(typeof(CombustionResult), MethodType.Constructor, typeof(double), typeof(double), typeof(CombustionValue[]))]
 internal static class CombustionResultPatch
 {
+    /// <summary>
+    /// Returns whether the methane + ozone combustion reaction should also be patched. Wired to the BepInEx
+    /// configuration in <see cref="Plugin.Awake"/> and defaults to false.
+    /// </summary>
+    internal static Func<bool> PatchMethaneOzoneReaction = () => false;
+
     // ReSharper disable once InconsistentNaming, since Harmony relies on the argument name to access the original instance 
     internal static void Postfix(CombustionResult __instance)
     {
@@ -19,7 +26,8 @@ internal static class CombustionResultPatch
             Patch(__instance, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
             Plugin.Logger?.LogInfo($"Replaced {nameof(CombustionResult)} with 1 {GasType.CarbonDioxide} and 2 {GasType.Steam}");
         }
-        else if (__instance.FuelMoleCount.Is(3.0)
+        else if (PatchMethaneOzoneReaction()
+                 && __instance.FuelMoleCount.Is(3.0)
                  && __instance.OxidiserMoleCount.Is(2.0)
                  && __instance.Outputs.Is(new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) }))
         {

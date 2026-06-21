@@ -22,6 +22,12 @@ BepInEx only loads plugins from its own `BepInEx/plugins` folder, while subscrib
 
 Alternatively, without a loader, install BepInEx and copy `StationeersCombustionFix.dll` into `BepInEx/plugins` manually.
 
+## Configuration
+
+The mod exposes one BepInEx setting (section `General`):
+
+* `PatchMethaneOzoneReaction` (default `false`): when enabled, also patches the methane + ozone combustion reaction. The methane + oxygen patch is always applied. You can toggle this in the StationeersLaunchPad configuration window at startup, or by editing the generated `BepInEx/config/StationeersCombustionFix.cfg` file.
+
 ## Setting Up the Project
 
 The project requires a reference to `Assembly-CSharp.dll` from your local Stationeers installation. This file is not included in the repository.
