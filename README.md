@@ -82,8 +82,7 @@ Running unit tests additionally requires `UnityEngine.dll` and `UnityEngine.Core
 
 ## Publishing to Steam Workshop
 
-1. Create the `$env:USERPROFILE\Documents\My Games\Stationeers\mods\StationeersCombustionFix` folder.
-2. Create an empty `GameData` folder in the new folder.
-3. Copy the `About` folder to the new folder.
-4. Copy the `StationeersCombustionFix.dll` to the new folder.
-5. Run Stationeers, then go to Workshop. You'll see the mod and the Publish button.
+The same steps apply for both the initial publish and subsequent updates.
+
+1. Run `.\Build-Plugin.ps1` to build and deploy the mod locally.
+2. Launch Stationeers, then go to Workshop. You'll see the mod and the Publish/Update button.
