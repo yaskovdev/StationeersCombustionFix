@@ -4,7 +4,7 @@
   <Author>yaskovdev</Author>
   <Version>1.1.0</Version>
   <Description>This mod is a BepInEx plugin.
-It requires BepInEx with the StationeersLaunchPad plugin to be installed.
+[b]It requires BepInEx with the StationeersLaunchPad plugin to be installed.[/b]
 See the detailed guide at: https://github.com/StationeersLaunchPad/StationeersLaunchPad
 
 [h1]Stationeers Methane Combustion Fix[/h1]
