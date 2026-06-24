@@ -11,7 +11,7 @@ See the detailed guide at: https://github.com/StationeersLaunchPad/StationeersLa
 
 Fixes incorrect methane combustion reactions to be chemically accurate.
 
-[b]Notes:[/b]
+Notes:
 [list]
 [*] Works with existing saves. The mod does not modify save files, so it can be safely enabled or disabled at any time.
 [*] Avoids the issue of leftover methane in the welder.
