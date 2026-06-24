@@ -1,13 +1,17 @@
 namespace StationeersCombustionFix;
 
+using System.Globalization;
 using System.Linq;
 using Assets.Scripts.Atmospherics;
 
 public static class CombustionResultExtensions
 {
     public static string Format(this CombustionResult result) =>
-        $"(FuelMoleCount: {result.FuelMoleCount}, OxidiserMoleCount: {result.OxidiserMoleCount}, Outputs: [{string.Join(", ", result.Outputs.Select(Format))}])";
+        $"(FuelMoleCount: {Format(result.FuelMoleCount)}, OxidiserMoleCount: {Format(result.OxidiserMoleCount)}, Outputs: [{string.Join(", ", result.Outputs.Select(Format))}])";
 
     private static string Format(CombustionValue value) =>
-        $"{value.GasType}: {value.Quantity}";
+        $"{value.GasType}: {Format(value.Quantity)}";
+
+    private static string Format(MoleQuantity quantity) =>
+        quantity.ToDouble().ToString(CultureInfo.InvariantCulture);
 }
