@@ -1,6 +1,7 @@
 ﻿namespace StationeersCombustionFix;
 
 using System;
+using System.Collections.Generic;
 using Assets.Scripts.Atmospherics;
 using HarmonyLib;
 using static Assets.Scripts.Atmospherics.Chemistry;
@@ -37,12 +38,16 @@ internal static class CombustionResultPatch
         }
     }
 
-    private static void Patch(CombustionResult combustionResult, MoleQuantity fuelMoleCount, MoleQuantity oxidiserMoleCount, CombustionValue[] outputs)
+    private static void Patch(CombustionResult instance, MoleQuantity fuelMoleCount, MoleQuantity oxidiserMoleCount, CombustionValue[] outputs)
     {
-        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelMoleCount)).SetValue(combustionResult, fuelMoleCount);
-        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserMoleCount)).SetValue(combustionResult, oxidiserMoleCount);
-        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.OxidiserRatio)).SetValue(combustionResult, combustionResult.OxidiserMoleCount / combustionResult.FuelMoleCount);
-        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.FuelRatio)).SetValue(combustionResult, combustionResult.FuelMoleCount / combustionResult.OxidiserMoleCount);
-        AccessTools.Field(typeof(CombustionResult), nameof(CombustionResult.Outputs)).SetValue(combustionResult, outputs);
+        var fieldValues = new List<(string Field, object Value)>
+        {
+            (nameof(CombustionResult.FuelMoleCount), fuelMoleCount),
+            (nameof(CombustionResult.OxidiserMoleCount), oxidiserMoleCount),
+            (nameof(CombustionResult.OxidiserRatio), oxidiserMoleCount / fuelMoleCount),
+            (nameof(CombustionResult.FuelRatio), fuelMoleCount / oxidiserMoleCount),
+            (nameof(CombustionResult.Outputs), outputs)
+        };
+        fieldValues.ForEach(it => AccessTools.Field(typeof(CombustionResult), it.Field).SetValue(instance, it.Value));
     }
 }
