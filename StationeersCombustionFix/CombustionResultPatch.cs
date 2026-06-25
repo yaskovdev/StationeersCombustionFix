@@ -15,25 +15,20 @@ internal static class CombustionResultPatch
     /// </summary>
     internal static Func<bool> PatchMethaneOzoneReaction = () => false;
 
-    internal static void Postfix() => PatchReactions(Combustion.ResultMethaneOxygen, Combustion.ResultMethaneOzone);
-
-    internal static void PatchReactions(CombustionResult methaneOxygen, CombustionResult methaneOzone)
+    internal static void Postfix()
     {
         // CombustionResult is a reference type, so mutating the shared, named Combustion.Result* instances propagates
         // the fix everywhere the game uses them, without having to patch every method that consumes the reactions.
-        Plugin.Logger?.LogInfo($"Patching methane + oxygen reaction: {methaneOxygen.Format()}");
-        Patch(methaneOxygen, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
-        Plugin.Logger?.LogInfo($"Patched methane + oxygen reaction: {methaneOxygen.Format()}");
+        Patch(Combustion.ResultMethaneOxygen, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
         if (PatchMethaneOzoneReaction())
         {
-            Plugin.Logger?.LogInfo($"Patching methane + ozone reaction: {methaneOzone.Format()}");
-            Patch(methaneOzone, new MoleQuantity(3.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
-            Plugin.Logger?.LogInfo($"Patched methane + ozone reaction: {methaneOzone.Format()}");
+            Patch(Combustion.ResultMethaneOzone, new MoleQuantity(3.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
         }
     }
 
-    private static void Patch(CombustionResult instance, MoleQuantity fuelMoleCount, MoleQuantity oxidiserMoleCount, CombustionValue[] outputs)
+    internal static void Patch(CombustionResult instance, MoleQuantity fuelMoleCount, MoleQuantity oxidiserMoleCount, CombustionValue[] outputs)
     {
+        Plugin.Logger?.LogInfo($"Patching reaction: {instance.Format()}");
         var fieldValues = new List<(string Field, object Value)>
         {
             (nameof(CombustionResult.FuelMoleCount), fuelMoleCount),
@@ -43,5 +38,6 @@ internal static class CombustionResultPatch
             (nameof(CombustionResult.Outputs), outputs)
         };
         fieldValues.ForEach(it => AccessTools.Field(typeof(CombustionResult), it.Field).SetValue(instance, it.Value));
+        Plugin.Logger?.LogInfo($"Patched reaction: {instance.Format()}");
     }
 }
