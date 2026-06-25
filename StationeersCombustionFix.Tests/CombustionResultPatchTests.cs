@@ -17,7 +17,7 @@ public class CombustionResultPatchTests
     {
         var result = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0) });
         result.ShouldBeEquivalentTo(Combustion.ResultMethaneOxygen);
-        CombustionResultPatch.Postfix(result);
+        CombustionResultPatch.PatchIfMatches(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(2.0));
         result.OxidiserRatio.ShouldBe(new MoleQuantity(2.0));
@@ -31,7 +31,7 @@ public class CombustionResultPatchTests
         CombustionResultPatch.PatchMethaneOzoneReaction = () => true;
         var result = new CombustionResult(3.0, 2.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) });
         result.ShouldBeEquivalentTo(Combustion.ResultMethaneOzone);
-        CombustionResultPatch.Postfix(result);
+        CombustionResultPatch.PatchIfMatches(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(3.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(4.0));
         result.OxidiserRatio.ToDouble().ShouldBe(new MoleQuantity(1.3333).ToDouble(), 0.0001);
@@ -49,7 +49,7 @@ public class CombustionResultPatchTests
         var originalOutputs = result.Outputs;
         var originalOxidiserRatio = result.OxidiserRatio;
         var originalFuelRatio = result.FuelRatio;
-        CombustionResultPatch.Postfix(result);
+        CombustionResultPatch.PatchIfMatches(result);
         result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
         result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
         result.Outputs.ShouldBe(originalOutputs);
@@ -70,7 +70,7 @@ public class CombustionResultPatchTests
                 var originalOutputs = result.Outputs;
                 var originalOxidiserRatio = result.OxidiserRatio;
                 var originalFuelRatio = result.FuelRatio;
-                CombustionResultPatch.Postfix(result);
+                CombustionResultPatch.PatchIfMatches(result);
                 result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
                 result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
                 result.Outputs.ShouldBe(originalOutputs);
