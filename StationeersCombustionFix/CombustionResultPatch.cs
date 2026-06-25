@@ -10,6 +10,12 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 internal static class CombustionResultPatch
 {
     /// <summary>
+    /// Returns whether the methane + nitrous oxide combustion reaction should also be patched. Wired to the BepInEx
+    /// configuration in <see cref="Plugin.Awake"/> and defaults to false.
+    /// </summary>
+    internal static Func<bool> PatchMethaneNitrousReaction = () => false;
+
+    /// <summary>
     /// Returns whether the methane + ozone combustion reaction should also be patched. Wired to the BepInEx
     /// configuration in <see cref="Plugin.Awake"/> and defaults to false.
     /// </summary>
@@ -25,6 +31,15 @@ internal static class CombustionResultPatch
         {
             Plugin.Logger?.LogInfo($"Matched methane + oxygen, replacing {__instance.Format()}");
             Patch(__instance, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
+            Plugin.Logger?.LogInfo($"Replaced with {__instance.Format()}");
+        }
+        else if (PatchMethaneNitrousReaction()
+                 && __instance.FuelMoleCount.Is(1.0)
+                 && __instance.OxidiserMoleCount.Is(1.0)
+                 && __instance.Outputs.Is(new CombustionValue[] { new(GasType.CarbonDioxide, 2.0), new(GasType.Nitrogen, 2.0) }))
+        {
+            Plugin.Logger?.LogInfo($"Matched methane + nitrous oxide, replacing {__instance.Format()}");
+            Patch(__instance, new MoleQuantity(1.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0), new(GasType.Nitrogen, 4.0) });
             Plugin.Logger?.LogInfo($"Replaced with {__instance.Format()}");
         }
         else if (PatchMethaneOzoneReaction()

@@ -21,16 +21,17 @@ The plugin targets `netstandard2.0`; the test project targets `net8.0` (MSTest +
 
 The mod patches combustion reactions via a Harmony **postfix** on the `CombustionResult` constructor. The flow is:
 
-1. **`Plugin.cs`** — BepInEx entry point. Reads config, wires up `PatchMethaneOzoneReaction` as a `Func<bool>`, and calls `harmony.PatchAll()`.
+1. **`Plugin.cs`** — BepInEx entry point. Reads config, wires up `Func<bool>` delegates for optional reactions, and calls `harmony.PatchAll()`.
 2. **`CombustionResultPatch.cs`** — The Harmony `[HarmonyPatch]`. The `Postfix` method inspects each newly constructed `CombustionResult` and, if it matches the game's incorrect reaction values, replaces them with correct stoichiometry using reflection (`AccessTools.Field`).
-3. **Extension methods** (`MoleQuantityExtensions.cs`, `CombustionValueExtensions.cs`) — Provide `.Is()` comparisons for `MoleQuantity` and `CombustionValue[]`, used for exact matching.
+3. **Extension methods** (`MoleQuantityExtensions.cs`, `CombustionValueExtensions.cs`, `CombustionResultExtensions.cs`) — Provide `.Is()` comparisons for `MoleQuantity` and `CombustionValue[]` (used for exact matching) and `.Format()` for logging.
 
 ## Key Conventions
 
 - **Exact match detection:** The postfix patch intentionally uses exact (non-fuzzy, order-sensitive) matching of mole counts and output arrays. This is by design — if the game developers change these values, the mod should silently stop patching rather than apply corrections to an unrecognized reaction. Never introduce fuzzy or approximate matching.
-- **Methane + oxygen is always patched; methane + ozone is opt-in:** The methane + oxygen reaction is always corrected. The methane + ozone reaction is gated behind the `PatchMethaneOzoneReaction` config setting and is **disabled by default**. Default-off is deliberate: it preserves existing users' behavior on update (least surprise) and the ozone reaction is the less-tested branch. New or potentially-surprising patches should default off.
+- **Methane + oxygen is always patched; other reactions are opt-in:** The methane + oxygen reaction is always corrected. Methane + nitrous oxide and methane + ozone are each gated behind their own `Func<bool>` config setting and are **disabled by default**. Default-off is deliberate: it preserves existing users' behavior on update (least surprise) and the additional reactions are less-tested. New or potentially-surprising patches should default off.
+- **Reaction order follows `Combustion.cs`:** The if/else-if chain in `CombustionResultPatch.Postfix` and the declarations in Plugin/README/About follow the same order as the game's `Combustion` class (oxygen, nitrous oxide, ozone).
+- **Config via `Func<bool>`:** Each optional reaction has a `Func<bool>` delegate rather than a static bool. `Plugin.Awake` binds the BepInEx `ConfigEntry` (kept private) and wires the delegate to read `.Value` **live** on each call — always current, no caching or `SettingChanged` needed. The delegate also lets tests override the setting without any BepInEx infrastructure.
 - **Reflection for readonly fields:** `CombustionResult` fields are readonly, so the patch uses `AccessTools.Field(...).SetValue(...)` to overwrite them post-construction.
-- **Config via `Func<bool>`:** `CombustionResultPatch.PatchMethaneOzoneReaction` is a `Func<bool>` delegate rather than a static bool. `Plugin.Awake` binds the BepInEx `ConfigEntry` (kept private) and wires this delegate to read `.Value` **live** on each call — always current, no caching or `SettingChanged` needed. The delegate also lets tests override the setting without any BepInEx infrastructure.
 - **`.Is()` not `.Equals()`:** The comparison extensions are named `.Is(...)` rather than `Equals` on purpose — an extension method named `Equals` is unreachable via instance-call syntax (the instance/`object.Equals` always wins) and creates method-group ambiguity.
 - **`using` directives go inside the namespace** (per `.editorconfig`).
 

@@ -6,15 +6,23 @@ Fixes incorrect methane combustion reactions to be chemically accurate.
 
 ## Methane + Oxygen
 
-Replaces the incorrect reaction `2 CH₄ + O₂ → 6 CO₂ + 3 POL` with the correct reaction `CH₄ + 2 O₂ → CO₂ + 2 H₂O`.
+Replaces the incorrect reaction `2 CH₄ + O₂ → 6 CO₂ + 3 Pol` with the correct reaction `CH₄ + 2 O₂ → CO₂ + 2 H₂O`.
 
 Recommended fuel mixture: 33% methane, 67% oxygen.
 
 Always enabled.
 
+## Methane + Nitrous Oxide
+
+Replaces the incorrect reaction `CH₄ + N₂O → 2 CO₂ + 2 N₂` with the correct reaction `CH₄ + 4 N₂O → CO₂ + 2 H₂O + 4 N₂`.
+
+Recommended fuel mixture: 20% methane, 80% nitrous oxide.
+
+Disabled by default. Enable in the StationeersLaunchPad configuration window or in `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` (where `<GameDir>` is the game folder, e.g. `C:\Program Files (x86)\Steam\steamapps\common\Stationeers`).
+
 ## Methane + Ozone
 
-Replaces the incorrect reaction `3 CH₄ + 2 O₃ → 6 CO₂ + 3 POL + H₂O` with the correct reaction `3 CH₄ + 4 O₃ → 3 CO₂ + 6 H₂O`.
+Replaces the incorrect reaction `3 CH₄ + 2 O₃ → 6 CO₂ + 3 Pol + H₂O` with the correct reaction `3 CH₄ + 4 O₃ → 3 CO₂ + 6 H₂O`.
 
 Recommended fuel mixture: 42% methane, 58% ozone.
 
@@ -59,9 +67,12 @@ Alternatively, without a loader, install BepInEx and copy `StationeersCombustion
 
 ## Configuration
 
-The mod exposes one BepInEx setting (section `General`):
+The mod exposes the following BepInEx settings (section `General`):
 
-* `PatchMethaneOzoneReaction` (default `false`): when enabled, also patches the methane + ozone combustion reaction. The methane + oxygen patch is always applied. You can toggle this in the StationeersLaunchPad configuration window at startup, or by editing the generated `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` file.
+* `PatchMethaneNitrousReaction` (default `false`): when enabled, also patches the methane + nitrous oxide combustion reaction.
+* `PatchMethaneOzoneReaction` (default `false`): when enabled, also patches the methane + ozone combustion reaction.
+
+The methane + oxygen patch is always applied. You can toggle the optional patches in the StationeersLaunchPad configuration window at startup, or by editing the generated `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` file.
 
 ## Setting Up the Project
 

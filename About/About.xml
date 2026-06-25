@@ -2,7 +2,7 @@
 <ModMetadata xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Stationeers Methane Combustion Fix</Name>
   <Author>yaskovdev</Author>
-  <Version>1.1.0</Version>
+  <Version>1.2.0</Version>
   <Description>This mod is a BepInEx plugin.
 [b]It requires BepInEx with the StationeersLaunchPad plugin to be installed.[/b]
 See the detailed guide at: https://github.com/StationeersLaunchPad/StationeersLaunchPad
@@ -21,7 +21,7 @@ Notes:
 [h2]Methane + Oxygen[/h2]
 
 Replaces the incorrect reaction:
-2 CH4 + O2 -> 6 CO2 + 3 POL
+2 CH4 + O2 -> 6 CO2 + 3 Pol
 
 With the correct reaction:
 CH4 + 2 O2 -> CO2 + 2 H2O
@@ -30,10 +30,22 @@ Recommended fuel mixture: 33% methane, 67% oxygen.
 
 Always enabled.
 
+[h2]Methane + Nitrous Oxide[/h2]
+
+Replaces the incorrect reaction:
+CH4 + N2O -> 2 CO2 + 2 N2
+
+With the correct reaction:
+CH4 + 4 N2O -> CO2 + 2 H2O + 4 N2
+
+Recommended fuel mixture: 20% methane, 80% nitrous oxide.
+
+[b]Disabled by default.[/b] Enable in the StationeersLaunchPad configuration window or in BepInEx/config/StationeersCombustionFix.cfg (BepInEx is located in the game folder, e.g. C:\Program Files (x86)\Steam\steamapps\common\Stationeers).
+
 [h2]Methane + Ozone[/h2]
 
 Replaces the incorrect reaction:
-3 CH4 + 2 O3 -> 6 CO2 + 3 POL + H2O
+3 CH4 + 2 O3 -> 6 CO2 + 3 Pol + H2O
 
 With the correct reaction:
 3 CH4 + 4 O3 -> 3 CO2 + 6 H2O
