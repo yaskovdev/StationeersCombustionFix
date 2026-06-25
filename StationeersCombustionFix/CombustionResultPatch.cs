@@ -15,34 +15,20 @@ internal static class CombustionResultPatch
     /// </summary>
     internal static Func<bool> PatchMethaneOzoneReaction = () => false;
 
-    internal static void Postfix()
-    {
-        // Combustion.Result* are static readonly references to CombustionResult instances. Since CombustionResult
-        // is a reference type, mutating the fields of these shared instances propagates the fix everywhere the game
-        // uses them, without having to patch every method that consumes the reactions.
-        PatchIfMatches(Combustion.ResultMethaneOxygen);
-        PatchIfMatches(Combustion.ResultMethaneOzone);
-    }
+    internal static void Postfix() => PatchReactions(Combustion.ResultMethaneOxygen, Combustion.ResultMethaneOzone);
 
-    internal static void PatchIfMatches(CombustionResult instance)
+    internal static void PatchReactions(CombustionResult methaneOxygen, CombustionResult methaneOzone)
     {
-        Plugin.Logger?.LogInfo($"Inspecting reaction: {instance.Format()}");
-        if (instance.FuelMoleCount.Is(2.0)
-            && instance.OxidiserMoleCount.Is(1.0)
-            && instance.Outputs.Is(new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0) }))
+        // CombustionResult is a reference type, so mutating the shared, named Combustion.Result* instances propagates
+        // the fix everywhere the game uses them, without having to patch every method that consumes the reactions.
+        Plugin.Logger?.LogInfo($"Patching methane + oxygen reaction: {methaneOxygen.Format()}");
+        Patch(methaneOxygen, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
+        Plugin.Logger?.LogInfo($"Patched methane + oxygen reaction: {methaneOxygen.Format()}");
+        if (PatchMethaneOzoneReaction())
         {
-            Plugin.Logger?.LogInfo($"Matched methane + oxygen, replacing {instance.Format()}");
-            Patch(instance, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
-            Plugin.Logger?.LogInfo($"Replaced with {instance.Format()}");
-        }
-        else if (PatchMethaneOzoneReaction()
-                 && instance.FuelMoleCount.Is(3.0)
-                 && instance.OxidiserMoleCount.Is(2.0)
-                 && instance.Outputs.Is(new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) }))
-        {
-            Plugin.Logger?.LogInfo($"Matched methane + ozone, replacing {instance.Format()}");
-            Patch(instance, new MoleQuantity(3.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
-            Plugin.Logger?.LogInfo($"Replaced with {instance.Format()}");
+            Plugin.Logger?.LogInfo($"Patching methane + ozone reaction: {methaneOzone.Format()}");
+            Patch(methaneOzone, new MoleQuantity(3.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
+            Plugin.Logger?.LogInfo($"Patched methane + ozone reaction: {methaneOzone.Format()}");
         }
     }
 
