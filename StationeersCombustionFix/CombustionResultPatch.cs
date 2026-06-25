@@ -26,7 +26,7 @@ internal static class CombustionResultPatch
         }
     }
 
-    internal static void Patch(CombustionResult instance, MoleQuantity fuelMoleCount, MoleQuantity oxidiserMoleCount, CombustionValue[] outputs)
+    private static void Patch(CombustionResult instance, MoleQuantity fuelMoleCount, MoleQuantity oxidiserMoleCount, CombustionValue[] outputs)
     {
         Plugin.Logger?.LogInfo($"Patching reaction: {instance.Format()}");
         var fieldValues = new List<(string Field, object Value)>
