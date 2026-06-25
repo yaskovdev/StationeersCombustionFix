@@ -36,14 +36,14 @@ public class CombustionResultPatch
         _logger = logger;
     }
 
-    public void PatchReactions() => PatchReactions(typeof(Combustion));
+    public void PatchReactions() => PatchReactions(typeof(Combustion), null);
 
     /// <summary>
     /// Overwrites the configured <see cref="CombustionResult"/> fields declared on <paramref name="containerType"/>
     /// with their corrected reactions. Pass a type with a null <paramref name="container"/> for static fields (as
     /// <c>Combustion</c> declares them), or a type plus an instance for instance fields (used by the tests).
     /// </summary>
-    internal void PatchReactions(Type containerType, object? container = null)
+    internal void PatchReactions(Type containerType, object? container)
     {
         foreach (var reaction in _reactions)
         {
