@@ -14,7 +14,7 @@ public class CombustionResultPatchTests
     [TestMethod]
     public void ShouldPatchMethaneOxygenReaction()
     {
-        CombustionResultPatch.Postfix();
+        CombustionResultPatch.PatchReactions();
         var result = Combustion.ResultMethaneOxygen;
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(2.0));
@@ -27,7 +27,7 @@ public class CombustionResultPatchTests
     public void ShouldPatchMethaneOzoneReactionWhenEnabled()
     {
         CombustionResultPatch.PatchMethaneOzoneReaction = () => true;
-        CombustionResultPatch.Postfix();
+        CombustionResultPatch.PatchReactions();
         var result = Combustion.ResultMethaneOzone;
         result.FuelMoleCount.ShouldBe(new MoleQuantity(3.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(4.0));
@@ -45,7 +45,7 @@ public class CombustionResultPatchTests
         var originalOutputs = result.Outputs;
         var originalOxidiserRatio = result.OxidiserRatio;
         var originalFuelRatio = result.FuelRatio;
-        CombustionResultPatch.Postfix();
+        CombustionResultPatch.PatchReactions();
         result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
         result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
         result.Outputs.ShouldBe(originalOutputs);

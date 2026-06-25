@@ -19,19 +19,21 @@ The plugin targets `netstandard2.0`; the test project targets `net8.0` (MSTest +
 
 ## Architecture
 
-The mod patches combustion reactions via a Harmony **postfix** on the `Combustion` type's **static constructor**. The flow is:
+The mod patches combustion reactions by **directly mutating** the game's named `Combustion.Result*` reaction objects at plugin startup. The flow is:
 
-1. **`Plugin.cs`** — BepInEx entry point. Reads config, wires up `PatchMethaneOzoneReaction` as a `Func<bool>`, and calls `harmony.PatchAll()`.
-2. **`CombustionResultPatch.cs`** — The Harmony `[HarmonyPatch]`. The `Postfix` runs after `Combustion`'s static constructor and mutates the named, shared `Combustion.Result*` instances directly (`Combustion.ResultMethaneOxygen` always, `Combustion.ResultMethaneOzone` when opted in), overwriting their readonly fields with correct stoichiometry via reflection (`AccessTools.Field`). Because `CombustionResult` is a reference type, mutating these shared instances propagates the fix everywhere the game uses them.
+1. **`Plugin.cs`** — BepInEx entry point. Reads config, wires up `PatchMethaneOzoneReaction` as a `Func<bool>`, and calls `CombustionResultPatch.PatchReactions()`.
+2. **`CombustionResultPatch.cs`** — `PatchReactions()` mutates the named, shared `Combustion.Result*` instances directly (`Combustion.ResultMethaneOxygen` always, `Combustion.ResultMethaneOzone` when opted in), overwriting their readonly fields with correct stoichiometry via reflection (`AccessTools.Field`). Because `CombustionResult` is a reference type, mutating these shared instances propagates the fix everywhere the game uses them. Reading a field first triggers `Combustion`'s static constructor, so the instances are guaranteed to exist.
 3. **`CombustionResultExtensions.cs`** — Provides a `Format()` helper used for logging.
+
+> **Why not a Harmony patch?** An earlier approach used a Harmony postfix on `Combustion`'s static constructor, but Harmony triggers the static constructor while gathering metadata to apply the patch — so the `.cctor` runs (once) *before* the postfix is attached, and the postfix never fires. See the [static constructors edge case](https://harmony.pardeike.net/articles/patching-edgecases.html#static-constructors). Direct mutation sidesteps this entirely; HarmonyLib is still referenced only for `AccessTools`.
 
 ## Key Conventions
 
-- **Patch named fields directly:** The postfix targets the named `Combustion.Result*` fields by name (no value matching), so it knows exactly which reaction it is editing. It does not inspect or match reaction values to identify them.
+- **Patch named fields directly:** `PatchReactions()` targets the named `Combustion.Result*` fields by name (no value matching), so it knows exactly which reaction it is editing. It does not inspect or match reaction values to identify them.
 - **Methane + oxygen is always patched; methane + ozone is opt-in:** The methane + oxygen reaction is always corrected. The methane + ozone reaction is gated behind the `PatchMethaneOzoneReaction` config setting and is **disabled by default**. Default-off is deliberate: it preserves existing users' behavior on update (least surprise) and the ozone reaction is the less-tested branch. New or potentially-surprising patches should default off.
 - **Reflection for readonly fields:** `CombustionResult` fields are readonly, so the patch uses `AccessTools.Field(...).SetValue(...)` to overwrite them.
 - **Config via `Func<bool>`:** `CombustionResultPatch.PatchMethaneOzoneReaction` is a `Func<bool>` delegate rather than a static bool. `Plugin.Awake` binds the BepInEx `ConfigEntry` (kept private) and wires this delegate to read `.Value` **live** on each call — always current, no caching or `SettingChanged` needed. The delegate also lets tests override the setting without any BepInEx infrastructure.
-- **Testable `Patch` helper:** The shared `Patch(instance, fuel, oxidiser, outputs)` helper applies one correction (sets the readonly fields and logs before/after). `Postfix` calls it once for methane + oxygen and, when opted in, once for methane + ozone. Tests exercise `Postfix()` against the real `Combustion.Result*` statics; the corrections are idempotent (absolute values), so the tests are order-independent.
+- **Testable `Patch` helper:** The shared `Patch(instance, fuel, oxidiser, outputs)` helper applies one correction (sets the readonly fields and logs before/after). `PatchReactions()` calls it once for methane + oxygen and, when opted in, once for methane + ozone. Tests exercise `PatchReactions()` against the real `Combustion.Result*` statics; the corrections are idempotent (absolute values), so the tests are order-independent.
 - **`using` directives go inside the namespace** (per `.editorconfig`).
 
 ## Distribution & Loading
