@@ -14,15 +14,18 @@ internal static class CombustionResultPatch
     /// </summary>
     internal static Func<bool> PatchMethaneOzoneReaction = () => false;
 
-    internal static void PatchReactions()
+    internal static void PatchReactions() =>
+        // Reading these fields triggers Combustion's static constructor, so the instances are guaranteed to exist.
+        PatchReactions(Combustion.ResultMethaneOxygen, Combustion.ResultMethaneOzone);
+
+    internal static void PatchReactions(CombustionResult methaneOxygen, CombustionResult methaneOzone)
     {
         // CombustionResult is a reference type, so mutating the shared, named Combustion.Result* instances propagates
         // the fix everywhere the game uses them, without having to patch every method that consumes the reactions.
-        // Reading a field also triggers Combustion's static constructor, so the instances are guaranteed to exist.
-        Patch(Combustion.ResultMethaneOxygen, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
+        Patch(methaneOxygen, new MoleQuantity(1.0), new MoleQuantity(2.0), new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
         if (PatchMethaneOzoneReaction())
         {
-            Patch(Combustion.ResultMethaneOzone, new MoleQuantity(3.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
+            Patch(methaneOzone, new MoleQuantity(3.0), new MoleQuantity(4.0), new CombustionValue[] { new(GasType.CarbonDioxide, 3.0), new(GasType.Steam, 6.0) });
         }
     }
 
