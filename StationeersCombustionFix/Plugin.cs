@@ -13,7 +13,7 @@ public class Plugin : BaseUnityPlugin
             false,
             "Also patch the methane + ozone combustion reaction. Disabled by default; the methane + oxygen patch is always applied.");
 
-        // TODO: test that changes in config in SLP are applied
+        // TODO: this is called once StationeersLaunchPad loads the mod. At this point it's too late to change the value of PatchMethaneOzoneReaction config param.
         new CombustionResultPatch(patchMethaneOzoneReaction.Value, Logger).PatchReactions();
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded! Methane + ozone patch enabled: {patchMethaneOzoneReaction.Value}");
     }
