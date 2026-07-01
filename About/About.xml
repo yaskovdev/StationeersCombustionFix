@@ -4,8 +4,7 @@
   <Author>yaskovdev</Author>
   <Version>1.3.0</Version>
   <Description>This mod is a BepInEx plugin.
-[b]It requires BepInEx with the StationeersLaunchPad plugin to be installed.[/b]
-See the detailed guide at: https://github.com/StationeersLaunchPad/StationeersLaunchPad
+[b]It requires BepInEx with the StationeersLaunchPad plugin to be installed (see Installation below).[/b]
 
 [h1]Stationeers Methane Combustion Fix[/h1]
 
@@ -17,6 +16,13 @@ Notes:
 [*] Avoids the issue of leftover methane in the welder.
 [*] Tested with the Gas Fuel Generator (GFG). Combustion reaches the expected 90% ratio.
 [/list]
+
+[h2]Installation[/h2]
+
+[olist]
+[*] If you haven't already, follow the [url=https://github.com/StationeersLaunchPad/StationeersLaunchPad#installation]StationeersLaunchPad installation guide[/url] to install StationeersLaunchPad and BepInEx.
+[*] Press [b]Subscribe[/b] above. StationeersLaunchPad will pick up this mod automatically on the next launch.
+[/olist]
 
 [h2]Methane + Oxygen[/h2]
 
