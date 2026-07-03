@@ -55,6 +55,9 @@ Recommended fuel mixture: 42% methane, 58% ozone.
 
 Enabled by default. Can be disabled in the StationeersLaunchPad configuration window or in BepInEx/config/StationeersCombustionFix.cfg (BepInEx is located in the game folder, e.g. C:\Program Files (x86)\Steam\steamapps\common\Stationeers).
 
+[h2]Experimental: Hydrogen and Alcohol[/h2]
+The mod also corrects the hydrogen and alcohol combustion reactions. Alcohol is treated as ethanol (C2H6O). These are experimental and disabled by default. You can enable them individually in the mod config in StationeersLaunchPad.
+
 [h2]Feedback[/h2]
 Contributions, improvements, suggestions, and comments are welcome.
 

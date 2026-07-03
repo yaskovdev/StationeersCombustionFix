@@ -14,6 +14,11 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchMethaneNitrousReaction = () => false;
         CombustionResultPatch.PatchMethaneOzoneReaction = () => false;
+        CombustionResultPatch.PatchHydrogenOxygenReaction = () => false;
+        CombustionResultPatch.PatchHydrogenOzoneReaction = () => false;
+        CombustionResultPatch.PatchAlcoholOxygenReaction = () => false;
+        CombustionResultPatch.PatchAlcoholNitrousReaction = () => false;
+        CombustionResultPatch.PatchAlcoholOzoneReaction = () => false;
     }
 
     [TestMethod]
@@ -94,12 +99,177 @@ public class CombustionResultPatchTests
     }
 
     [TestMethod]
+    public void ShouldPatchHydrogenOxygenResultWhenEnabled()
+    {
+        CombustionResultPatch.PatchHydrogenOxygenReaction = () => true;
+        var result = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Steam, 3.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOxygen);
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(new MoleQuantity(2.0));
+        result.OxidiserMoleCount.ShouldBe(new MoleQuantity(1.0));
+        result.OxidiserRatio.ShouldBe(new MoleQuantity(0.5));
+        result.FuelRatio.ShouldBe(new MoleQuantity(2.0));
+        result.Outputs.ShouldBe(new CombustionValue[] { new(GasType.Steam, 2.0) });
+    }
+
+    [TestMethod]
+    public void ShouldNotPatchHydrogenOxygenResultWhenDisabled()
+    {
+        var result = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Steam, 3.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOxygen);
+        var originalFuelMoleCount = result.FuelMoleCount;
+        var originalOxidiserMoleCount = result.OxidiserMoleCount;
+        var originalOutputs = result.Outputs;
+        var originalOxidiserRatio = result.OxidiserRatio;
+        var originalFuelRatio = result.FuelRatio;
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
+        result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
+        result.Outputs.ShouldBe(originalOutputs);
+        result.OxidiserRatio.ShouldBe(originalOxidiserRatio);
+        result.FuelRatio.ShouldBe(originalFuelRatio);
+    }
+
+    [TestMethod]
+    public void ShouldPatchHydrogenOzoneResultWhenEnabled()
+    {
+        CombustionResultPatch.PatchHydrogenOzoneReaction = () => true;
+        var result = new CombustionResult(3.0, 1.0, new CombustionValue[] { new(GasType.Steam, 4.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOzone);
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(new MoleQuantity(3.0));
+        result.OxidiserMoleCount.ShouldBe(new MoleQuantity(1.0));
+        result.OxidiserRatio.ToDouble().ShouldBe(new MoleQuantity(0.3333).ToDouble(), 0.0001);
+        result.FuelRatio.ShouldBe(new MoleQuantity(3.0));
+        result.Outputs.ShouldBe(new CombustionValue[] { new(GasType.Steam, 3.0) });
+    }
+
+    [TestMethod]
+    public void ShouldNotPatchHydrogenOzoneResultWhenDisabled()
+    {
+        var result = new CombustionResult(3.0, 1.0, new CombustionValue[] { new(GasType.Steam, 4.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOzone);
+        var originalFuelMoleCount = result.FuelMoleCount;
+        var originalOxidiserMoleCount = result.OxidiserMoleCount;
+        var originalOutputs = result.Outputs;
+        var originalOxidiserRatio = result.OxidiserRatio;
+        var originalFuelRatio = result.FuelRatio;
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
+        result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
+        result.Outputs.ShouldBe(originalOutputs);
+        result.OxidiserRatio.ShouldBe(originalOxidiserRatio);
+        result.FuelRatio.ShouldBe(originalFuelRatio);
+    }
+
+    [TestMethod]
+    public void ShouldPatchAlcoholOxygenResultWhenEnabled()
+    {
+        CombustionResultPatch.PatchAlcoholOxygenReaction = () => true;
+        var result = new CombustionResult(1.0, 3.0, new CombustionValue[] { new(GasType.CarbonDioxide, 8.0), new(GasType.Steam, 2.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOxygen);
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
+        result.OxidiserMoleCount.ShouldBe(new MoleQuantity(3.0));
+        result.OxidiserRatio.ShouldBe(new MoleQuantity(3.0));
+        result.FuelRatio.ToDouble().ShouldBe(new MoleQuantity(0.3333).ToDouble(), 0.0001);
+        result.Outputs.ShouldBe(new CombustionValue[] { new(GasType.CarbonDioxide, 2.0), new(GasType.Steam, 3.0) });
+    }
+
+    [TestMethod]
+    public void ShouldNotPatchAlcoholOxygenResultWhenDisabled()
+    {
+        var result = new CombustionResult(1.0, 3.0, new CombustionValue[] { new(GasType.CarbonDioxide, 8.0), new(GasType.Steam, 2.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOxygen);
+        var originalFuelMoleCount = result.FuelMoleCount;
+        var originalOxidiserMoleCount = result.OxidiserMoleCount;
+        var originalOutputs = result.Outputs;
+        var originalOxidiserRatio = result.OxidiserRatio;
+        var originalFuelRatio = result.FuelRatio;
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
+        result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
+        result.Outputs.ShouldBe(originalOutputs);
+        result.OxidiserRatio.ShouldBe(originalOxidiserRatio);
+        result.FuelRatio.ShouldBe(originalFuelRatio);
+    }
+
+    [TestMethod]
+    public void ShouldPatchAlcoholNitrousResultWhenEnabled()
+    {
+        CombustionResultPatch.PatchAlcoholNitrousReaction = () => true;
+        var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.Nitrogen, 4.0), new(GasType.Steam, 2.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholNitrous);
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
+        result.OxidiserMoleCount.ShouldBe(new MoleQuantity(6.0));
+        result.OxidiserRatio.ShouldBe(new MoleQuantity(6.0));
+        result.FuelRatio.ToDouble().ShouldBe(new MoleQuantity(0.1667).ToDouble(), 0.0001);
+        result.Outputs.ShouldBe(new CombustionValue[] { new(GasType.CarbonDioxide, 2.0), new(GasType.Steam, 3.0), new(GasType.Nitrogen, 6.0) });
+    }
+
+    [TestMethod]
+    public void ShouldNotPatchAlcoholNitrousResultWhenDisabled()
+    {
+        var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.Nitrogen, 4.0), new(GasType.Steam, 2.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholNitrous);
+        var originalFuelMoleCount = result.FuelMoleCount;
+        var originalOxidiserMoleCount = result.OxidiserMoleCount;
+        var originalOutputs = result.Outputs;
+        var originalOxidiserRatio = result.OxidiserRatio;
+        var originalFuelRatio = result.FuelRatio;
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
+        result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
+        result.Outputs.ShouldBe(originalOutputs);
+        result.OxidiserRatio.ShouldBe(originalOxidiserRatio);
+        result.FuelRatio.ShouldBe(originalFuelRatio);
+    }
+
+    [TestMethod]
+    public void ShouldPatchAlcoholOzoneResultWhenEnabled()
+    {
+        CombustionResultPatch.PatchAlcoholOzoneReaction = () => true;
+        var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 3.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOzone);
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
+        result.OxidiserMoleCount.ShouldBe(new MoleQuantity(2.0));
+        result.OxidiserRatio.ShouldBe(new MoleQuantity(2.0));
+        result.FuelRatio.ShouldBe(new MoleQuantity(0.5));
+        result.Outputs.ShouldBe(new CombustionValue[] { new(GasType.CarbonDioxide, 2.0), new(GasType.Steam, 3.0) });
+    }
+
+    [TestMethod]
+    public void ShouldNotPatchAlcoholOzoneResultWhenDisabled()
+    {
+        var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 3.0) });
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOzone);
+        var originalFuelMoleCount = result.FuelMoleCount;
+        var originalOxidiserMoleCount = result.OxidiserMoleCount;
+        var originalOutputs = result.Outputs;
+        var originalOxidiserRatio = result.OxidiserRatio;
+        var originalFuelRatio = result.FuelRatio;
+        CombustionResultPatch.Postfix(result);
+        result.FuelMoleCount.ShouldBe(originalFuelMoleCount);
+        result.OxidiserMoleCount.ShouldBe(originalOxidiserMoleCount);
+        result.Outputs.ShouldBe(originalOutputs);
+        result.OxidiserRatio.ShouldBe(originalOxidiserRatio);
+        result.FuelRatio.ShouldBe(originalFuelRatio);
+    }
+
+    [TestMethod]
     public void ShouldNotPatchOtherResults()
     {
-        CombustionResultPatch.PatchMethaneOzoneReaction = () => true;
         CombustionResultPatch.PatchMethaneNitrousReaction = () => true;
+        CombustionResultPatch.PatchMethaneOzoneReaction = () => true;
+        CombustionResultPatch.PatchHydrogenOxygenReaction = () => true;
+        CombustionResultPatch.PatchHydrogenOzoneReaction = () => true;
+        CombustionResultPatch.PatchAlcoholOxygenReaction = () => true;
+        CombustionResultPatch.PatchAlcoholNitrousReaction = () => true;
+        CombustionResultPatch.PatchAlcoholOzoneReaction = () => true;
         ImmutableList
-            .Create(Combustion.ResultHydrogenOxygen, Combustion.ResultHydrogenNitrous, Combustion.ResultHydrogenOzone, Combustion.ResultAlcoholOxygen, Combustion.ResultAlcoholNitrous, Combustion.ResultAlcoholOzone, Combustion.ResultHydrazine)
+            .Create(Combustion.ResultHydrogenNitrous, Combustion.ResultHydrazine)
             .ForEach(result =>
             {
                 var originalFuelMoleCount = result.FuelMoleCount;
