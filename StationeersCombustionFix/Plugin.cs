@@ -62,8 +62,15 @@ public class Plugin : BaseUnityPlugin
             "Patch the alcohol + ozone combustion reaction, treating alcohol as ethanol (C2H6O). Corrects Alc + 2 O3 -> CO2 + 3 H2O to C2H6O + 2 O3 -> 2 CO2 + 3 H2O. The methane + oxygen patch is always applied and has no toggle.");
         CombustionResultPatch.PatchAlcoholOzoneReaction = () => patchAlcoholOzoneReaction.Value;
 
+        var patchStartingFuelMixtures = Config.Bind(
+            "General",
+            "PatchStartingFuelMixtures",
+            false,
+            "Correct 2:1 methane + oxygen mixtures in new-world, new-player, and respawn spawn data to 1:2 while preserving total quantity. Supports both vanilla and custom start conditions and only affects newly spawned equipment.");
+        StartingFuelMixturePatch.PatchStartingFuelMixtures = () => patchStartingFuelMixtures.Value;
+
         var harmony = new Harmony("com.yaskovdev.stationeerscombustionfix");
         harmony.PatchAll(typeof(Plugin).Assembly);
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded! Methane + nitrous oxide patch enabled: {patchMethaneNitrousReaction.Value}, methane + ozone patch enabled: {patchMethaneOzoneReaction.Value}");
+        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} version {MyPluginInfo.PLUGIN_VERSION} is loaded! Methane + nitrous oxide patch enabled: {patchMethaneNitrousReaction.Value}, methane + ozone patch enabled: {patchMethaneOzoneReaction.Value}, starting fuel mixture patch enabled: {patchStartingFuelMixtures.Value}");
     }
 }

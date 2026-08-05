@@ -28,10 +28,18 @@ Recommended fuel mixture: 42% methane, 58% ozone.
 
 Enabled by default. Can be disabled in the StationeersLaunchPad configuration window or in `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` (where `<GameDir>` is the game folder, e.g. `C:\Program Files (x86)\Steam\steamapps\common\Stationeers`).
 
+## Optional Starting Fuel Mixture Fix
+
+The game's data-driven starting equipment still uses the old fuel ratio: 67% methane and 33% oxygen. With the corrected combustion reaction, this leaves excess methane in the starting welder and can ignite oxygen-rich surroundings.
+
+When `PatchStartingFuelMixtures` is enabled, the mod recognizes the exact legacy 2:1 methane/oxygen mixture in new-world, new-player, and respawn spawn data and changes it to 1:2 while preserving the total quantity and pressure. This covers the built-in welder canister and portable fuel tanks, plus custom start conditions that use the same spawn system. A custom jetpack fuel canister is covered too; the vanilla jetpack currently starts with nitrogen.
+
+Disabled by default. The setting only affects newly spawned equipment; existing tanks and saved contents are not changed.
+
 ## Notes
 
 * The mod does not modify save files, so it can be safely enabled or disabled at any time.
-* Avoids the issue of leftover methane in the welder.
+* Applies corrections at the reaction-definition level, so fuel allocation, consumption, and exhaust calculations use consistent stoichiometry. A correctly mixed welder therefore leaves no unburned fuel.
 * Tested with the Gas Fuel Generator (GFG). Combustion reaches the expected 90% ratio.
 
 ## Requirements
@@ -71,6 +79,7 @@ The mod exposes the following BepInEx settings (section `General`):
 
 * `PatchMethaneNitrousReaction` (default `true`): when enabled, also patches the methane + nitrous oxide combustion reaction.
 * `PatchMethaneOzoneReaction` (default `true`): when enabled, also patches the methane + ozone combustion reaction.
+* `PatchStartingFuelMixtures` (default `false`): corrects exact legacy 2:1 methane/oxygen mixtures in newly spawned starting and respawn equipment to 1:2.
 
 The methane + oxygen patch is always applied and cannot be disabled. You can toggle the optional patches in the StationeersLaunchPad configuration window at startup, or by editing the generated `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` file.
 
@@ -95,5 +104,6 @@ Running unit tests additionally requires `UnityEngine.dll` and `UnityEngine.Core
 
 The same steps apply for both the initial publish and subsequent updates.
 
-1. Run `.\Build-Plugin.ps1` to build and deploy the mod locally.
-2. Launch Stationeers, then go to Workshop. You'll see the mod and the Publish/Update button.
+1. Update the version in both `StationeersCombustionFix/StationeersCombustionFix.csproj` and `About/About.xml`. Keep the two values identical.
+2. Run `.\Build-Plugin.ps1` to build and deploy the mod locally.
+3. Launch Stationeers, then go to Workshop. You'll see the mod and the Publish/Update button.

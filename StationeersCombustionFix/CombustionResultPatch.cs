@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Assets.Scripts.Atmospherics;
 using HarmonyLib;
 using static Assets.Scripts.Atmospherics.Chemistry;
@@ -51,7 +52,7 @@ internal static class CombustionResultPatch
     /// </summary>
     internal static Func<bool> PatchAlcoholOzoneReaction = () => false;
 
-    // ReSharper disable once InconsistentNaming, since Harmony relies on the argument name to access the original instance 
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Harmony relies on the argument names")]
     internal static void Postfix(CombustionResult __instance)
     {
         Plugin.Logger?.LogInfo($"Constructed instance: {__instance.Format()}");

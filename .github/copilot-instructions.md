@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A BepInEx plugin (mod) for the game [Stationeers](https://store.steampowered.com/app/544550/Stationeers/) that fixes incorrect methane combustion reactions to be chemically accurate. It uses Harmony to patch `CombustionResult` constructor calls at runtime, replacing the game's incorrect stoichiometry with correct values.
+A BepInEx plugin (mod) for the game [Stationeers](https://store.steampowered.com/app/544550/Stationeers/) that fixes incorrect methane combustion reactions to be chemically accurate. It uses Harmony to patch `CombustionResult` constructor calls at runtime and can optionally correct legacy methane/oxygen mixtures in data-driven starting equipment.
 
 ## Build & Test
 
@@ -24,6 +24,8 @@ The mod patches combustion reactions via a Harmony **postfix** on the `Combustio
 1. **`Plugin.cs`** — BepInEx entry point. Reads config, wires up `Func<bool>` delegates for optional reactions, and calls `harmony.PatchAll()`.
 2. **`CombustionResultPatch.cs`** — The Harmony `[HarmonyPatch]`. The `Postfix` method inspects each newly constructed `CombustionResult` and, if it matches the game's incorrect reaction values, replaces them with correct stoichiometry using reflection (`AccessTools.Field`).
 3. **Extension methods** (`MoleQuantityExtensions.cs`, `CombustionValueExtensions.cs`, `CombustionResultExtensions.cs`) — Provide `.Is()` comparisons for `MoleQuantity` and `CombustionValue[]` (used for exact matching) and `.Format()` for logging.
+4. **`StartingFuelMixturePatch.cs`** — Tracks synchronous `SpawnData.Execute(Thing, Human)` start/respawn scopes and temporarily replaces matching `ThingSpawnData` gas actions while spawned equipment is created.
+5. **`StartingFuelMixture.cs`** — Pure matching/cloning logic for exact legacy 2:1 methane/oxygen spawn mixtures. It swaps the quantities to 1:2 while preserving total quantity and restores the cached spawn data after execution.
 
 ## Key Conventions
 
@@ -31,6 +33,7 @@ The mod patches combustion reactions via a Harmony **postfix** on the `Combustio
 - **Methane + oxygen is always patched; other reactions are configurable:** The methane + oxygen reaction is always corrected. Methane + nitrous oxide and methane + ozone are each gated behind their own `Func<bool>` config setting. They now **default to `true`** (changed in #1): enough time has passed for existing v1.2.0 users to have persisted their config to disk, so flipping the default only affects new users (who get all fixes out of the box) without altering existing users' stored settings. New patches whose values are less-tested or potentially surprising should still default off initially and be flipped on later once proven.
 - **Reaction order follows `Combustion.cs`:** The if/else-if chain in `CombustionResultPatch.Postfix` and the declarations in Plugin/README/About follow the same order as the game's `Combustion` class (oxygen, nitrous oxide, ozone).
 - **Config via `Func<bool>`:** Each optional reaction has a `Func<bool>` delegate rather than a static bool. `Plugin.Awake` binds the BepInEx `ConfigEntry` (kept private) and wires the delegate to read `.Value` **live** on each call — always current, no caching or `SettingChanged` needed. The delegate also lets tests override the setting without any BepInEx infrastructure.
+- **Starting fuel patch is exact and temporary:** Only start/respawn spawn graphs are in scope. The patch requires exactly one oxygen and one volatiles `GasAction`, the same unit and temperature, no other gases, and the exact legacy 2:1 ratio. It clones and restores the action list so cached game/mod spawn data is never permanently mutated. The feature defaults off.
 - **Reflection for readonly fields:** `CombustionResult` fields are readonly, so the patch uses `AccessTools.Field(...).SetValue(...)` to overwrite them post-construction.
 - **`.Is()` not `.Equals()`:** The comparison extensions are named `.Is(...)` rather than `Equals` on purpose — an extension method named `Equals` is unreachable via instance-call syntax (the instance/`object.Equals` always wins) and creates method-group ambiguity.
 - **`using` directives go inside the namespace** (per `.editorconfig`).
