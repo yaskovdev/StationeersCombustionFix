@@ -63,6 +63,8 @@ Enable PatchStartingFuelMixtures to change exact vanilla 2:1 methane/oxygen mixt
 
 Disabled by default. It only affects newly spawned equipment; existing tanks and saved contents are unchanged.
 
+Known limitation: starting-equipment tooltips show the vanilla mixture; the correction is applied when the equipment spawns.
+
 [h2]Experimental: Hydrogen and Alcohol[/h2]
 The mod also corrects the hydrogen and alcohol combustion reactions. Alcohol is treated as ethanol (C2H6O). These are experimental and disabled by default. You can enable them individually in the mod config in StationeersLaunchPad.
 
