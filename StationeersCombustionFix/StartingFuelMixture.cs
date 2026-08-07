@@ -2,12 +2,41 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Trading;
 using static Assets.Scripts.Atmospherics.Chemistry;
 
 internal static class StartingFuelMixture
 {
-    internal static List<ActionData>? CreateCorrectedActions(IReadOnlyList<ActionData> actions)
+    /// <summary>
+    /// Permanently corrects matching recipes throughout a deserialized spawn-data tree before the game initializes
+    /// them. For vanilla data, this is equivalent to changing
+    /// <c>Stationeers\rocketstation_Data\StreamingAssets\Data\startconditions.xml</c> in memory, so subsequent tooltips
+    /// and spawned contents are both derived from the corrected recipes.
+    /// </summary>
+    internal static int CorrectSpawnTree(SpawnData spawnData) =>
+        spawnData.Items.Sum(CorrectThingTree)
+        + spawnData.DynamicThings.Sum(CorrectThingTree)
+        + spawnData.Structures.Sum(CorrectThingTree)
+        + spawnData.Spawns.Sum(CorrectSpawnTree);
+
+    private static int CorrectThingTree(ThingSpawnData spawnData) =>
+        CorrectActions(spawnData)
+        + spawnData.Items.Sum(CorrectThingTree)
+        + spawnData.DynamicThings.Sum(CorrectThingTree)
+        + spawnData.Spawns.Sum(CorrectSpawnTree);
+
+    private static int CorrectActions(ThingSpawnData spawnData)
+    {
+        if (CreateCorrectedActions(spawnData.Actions) is { } correctedActions)
+        {
+            spawnData.Actions = correctedActions;
+            return 1;
+        }
+        return 0;
+    }
+
+    private static List<ActionData>? CreateCorrectedActions(IReadOnlyList<ActionData> actions)
     {
         var mixture = FindMethaneMixture(actions);
 

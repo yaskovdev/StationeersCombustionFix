@@ -17,15 +17,15 @@ public class StartingFuelMixturePatchTests
     }
 
     [TestMethod]
-    public void ShouldCorrectLegacyMoleMixture()
+    public void ShouldCorrectVanillaMoleMixture()
     {
-        var actions = new ActionData[]
+        var actions = new List<ActionData>
         {
             new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f },
             new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
         };
 
-        var correctedActions = StartingFuelMixture.CreateCorrectedActions(actions);
+        var correctedActions = CorrectActions(actions);
 
         correctedActions.ShouldNotBeNull();
         correctedActions.ShouldNotBeSameAs(actions);
@@ -36,15 +36,33 @@ public class StartingFuelMixturePatchTests
     }
 
     [TestMethod]
+    public void ShouldCorrectMixtureWhenMethaneActionComesFirst()
+    {
+        var actions = new List<ActionData>
+        {
+            new GasAction { Type = GasType.Methane, Moles = 1000f, Celsius = 20f },
+            new GasAction { Type = GasType.Oxygen, Moles = 500f, Celsius = 20f }
+        };
+
+        var correctedActions = CorrectActions(actions);
+
+        correctedActions.ShouldNotBeNull();
+        correctedActions.OfType<GasAction>().Select(it => it.Type)
+            .ShouldBe(new[] { GasType.Methane, GasType.Oxygen });
+        correctedActions.Gas(GasType.Methane).Moles.ShouldBe(500f);
+        correctedActions.Gas(GasType.Oxygen).Moles.ShouldBe(1000f);
+    }
+
+    [TestMethod]
     public void ShouldNotCorrectLitreMixture()
     {
-        var actions = new ActionData[]
+        var actions = new List<ActionData>
         {
             new GasAction { Type = GasType.Methane, Litres = 10f, Kelvin = 293.15f },
             new GasAction { Type = GasType.Oxygen, Litres = 5f, Kelvin = 293.15f }
         };
 
-        var correctedActions = StartingFuelMixture.CreateCorrectedActions(actions);
+        var correctedActions = CorrectActions(actions);
 
         correctedActions.ShouldBeNull();
     }
@@ -54,170 +72,167 @@ public class StartingFuelMixturePatchTests
     {
         var mixtures = new[]
         {
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 100f, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Moles = 50f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 60f, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 21f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f },
                 new GasAction { Type = GasType.Nitrogen, Moles = 1f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Litres = 100f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f, Litres = 50f, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Kelvin = 293.15f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f, Energy = 1f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f, Kelvin = 293.15f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
             },
-            new ActionData[]
+            new List<ActionData>
             {
                 new GasAction { Type = GasType.Oxygen, Moles = 50f },
                 new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
             }
         };
 
-        mixtures.ShouldAllBe(it => StartingFuelMixture.CreateCorrectedActions(it) == null);
+        mixtures.ShouldAllBe(it => CorrectActions(it) == null);
     }
 
     [TestMethod]
-    public void ShouldTemporarilyCorrectMixtureInsideStartingSpawnScope()
+    public void ShouldCorrectEveryExactMixtureInSpawnDataTree()
     {
-        var originalActions = new ActionData[]
+        var tank = FuelThing("CustomFuelTank", 500f, 1000f);
+        var tankActions = tank.Actions;
+        var canister = FuelThing("CustomWelderCanister", 50f, 100f);
+        var canisterActions = canister.Actions;
+        var tool = new DynamicSpawnData { PrefabId = "CustomWelder" };
+        tool.Items.Add(canister);
+        var containedDynamicTank = FuelThing("ContainedDynamicFuelTank", 500f, 1000f);
+        var containedDynamicTankActions = containedDynamicTank.Actions;
+        tool.DynamicThings.Add(containedDynamicTank);
+        var containedSpawnTank = FuelThing("ContainedSpawnFuelTank", 500f, 1000f);
+        var containedSpawnTankActions = containedSpawnTank.Actions;
+        var containedSpawn = new SpawnData { Id = "ContainedCustomSpawn" };
+        containedSpawn.DynamicThings.Add(containedSpawnTank);
+        tool.Spawns.Add(containedSpawn);
+        var structure = new StructureSpawnData
         {
-            new GasAction { Type = GasType.Oxygen, Moles = 500f, Celsius = 20f },
-            new GasAction { Type = GasType.Methane, Moles = 1000f, Celsius = 20f }
-        }.ToList();
-        var spawnData = new DynamicSpawnData
-        {
-            PrefabId = "DynamicGasTankAdvanced",
-            Actions = originalActions
+            PrefabId = "CustomStructure",
+            Actions = FuelActions(50f, 100f)
         };
+        var structureActions = structure.Actions;
+        var nestedTank = FuelThing("NestedCustomFuelTank", 500f, 1000f);
+        var nestedTankActions = nestedTank.Actions;
+        var nestedSpawn = new SpawnData { Id = "NestedCustomSpawn" };
+        nestedSpawn.DynamicThings.Add(nestedTank);
+        var spawnData = new SpawnData { Id = "CustomStartData" };
+        spawnData.DynamicThings.Add(tank);
+        spawnData.Items.Add(tool);
+        spawnData.Structures.Add(structure);
+        spawnData.Spawns.Add(nestedSpawn);
+
+        StartingFuelMixture.CorrectSpawnTree(spawnData).ShouldBe(6);
+
+        tank.Actions.ShouldNotBeSameAs(tankActions);
+        tank.Actions.Gas(GasType.Oxygen).Moles.ShouldBe(1000f);
+        tank.Actions.Gas(GasType.Methane).Moles.ShouldBe(500f);
+        canister.Actions.ShouldNotBeSameAs(canisterActions);
+        canister.Actions.Gas(GasType.Oxygen).Moles.ShouldBe(100f);
+        canister.Actions.Gas(GasType.Methane).Moles.ShouldBe(50f);
+        containedDynamicTank.Actions.ShouldNotBeSameAs(containedDynamicTankActions);
+        containedSpawnTank.Actions.ShouldNotBeSameAs(containedSpawnTankActions);
+        structure.Actions.ShouldNotBeSameAs(structureActions);
+        nestedTank.Actions.ShouldNotBeSameAs(nestedTankActions);
+
+        StartingFuelMixture.CorrectSpawnTree(spawnData).ShouldBe(0);
+    }
+
+    [TestMethod]
+    public void ShouldApplyCorrectionWhenSpawnDataIsInitializedAndSettingEnabled()
+    {
+        var target = FuelThing("CustomFuelTank", 500f, 1000f);
+        var originalActions = target.Actions;
+        var spawnData = new SpawnData { Id = "CustomSpawnData" };
+        spawnData.DynamicThings.Add(target);
         StartingFuelMixturePatch.PatchStartingFuelMixtures = () => true;
 
-        StartingSpawnScope.Enter();
-        try
-        {
-            StartingFuelMixturePatch.Prefix(spawnData, out var state);
+        StartingFuelMixturePatch.Prefix(spawnData);
 
-            spawnData.Actions.ShouldNotBeSameAs(originalActions);
-            spawnData.Actions.Gas(GasType.Oxygen).Moles.ShouldBe(1000f);
-            spawnData.Actions.Gas(GasType.Methane).Moles.ShouldBe(500f);
-
-            StartingFuelMixturePatch.Finalizer(spawnData, null, state).ShouldBeNull();
-            spawnData.Actions.ShouldBeSameAs(originalActions);
-        }
-        finally
-        {
-            StartingSpawnScope.Exit();
-        }
+        target.Actions.ShouldNotBeSameAs(originalActions);
+        target.Actions.Gas(GasType.Oxygen).Moles.ShouldBe(1000f);
+        target.Actions.Gas(GasType.Methane).Moles.ShouldBe(500f);
     }
 
     [TestMethod]
-    public void ShouldNotCorrectMixtureOutsideStartingSpawnScope()
+    public void ShouldLeaveSpawnDataUnchangedWhenSettingDisabled()
     {
-        var originalActions = new ActionData[]
-        {
-            new GasAction { Type = GasType.Oxygen, Moles = 50f, Celsius = 20f },
-            new GasAction { Type = GasType.Methane, Moles = 100f, Celsius = 20f }
-        }.ToList();
-        var spawnData = new DynamicSpawnData { Actions = originalActions };
-        StartingFuelMixturePatch.PatchStartingFuelMixtures = () => true;
+        var target = FuelThing("CustomFuelTank", 500f, 1000f);
+        var originalActions = target.Actions;
+        var spawnData = new SpawnData { Id = "CustomSpawnData" };
+        spawnData.DynamicThings.Add(target);
 
-        StartingFuelMixturePatch.Prefix(spawnData, out var state);
+        StartingFuelMixturePatch.Prefix(spawnData);
 
-        state.ShouldBeNull();
-        spawnData.Actions.ShouldBeSameAs(originalActions);
+        target.Actions.ShouldBeSameAs(originalActions);
     }
 
-    [TestMethod]
-    public void ShouldOnlyEnterScopeForStartingEventsAndFallbackKits()
+    private static List<ActionData>? CorrectActions(List<ActionData> actions)
     {
-        StartingSpawnScope.ShouldEnter(new SpawnData { EventType = SpawnEvent.NewWorld }).ShouldBeTrue();
-        StartingSpawnScope.ShouldEnter(new SpawnData { EventType = SpawnEvent.RespawnPlayerKit }).ShouldBeTrue();
-        StartingSpawnScope.ShouldEnter(new SpawnData { Id = "DefaultNewPlayer" }).ShouldBeTrue();
-        StartingSpawnScope.ShouldEnter(new SpawnData { Id = "DefaultRespawnPlayer" }).ShouldBeTrue();
-        StartingSpawnScope.ShouldEnter(new SpawnData { Id = "GasPowerPackage" }).ShouldBeFalse();
+        var target = new DynamicSpawnData { Actions = actions };
+        var spawnData = new SpawnData();
+        spawnData.DynamicThings.Add(target);
+
+        return StartingFuelMixture.CorrectSpawnTree(spawnData) == 0 ? null : target.Actions;
     }
 
-    [TestMethod]
-    public void ShouldKeepScopeActiveAcrossNestedNonEntrySpawns()
-    {
-        var outerSpawn = new SpawnData { EventType = SpawnEvent.NewPlayerKit };
-        var nestedSpawn = new SpawnData { Id = "DefaultToolbelt" };
+    private static DynamicSpawnData FuelThing(string prefabId, float oxygenMoles, float methaneMoles) =>
+        new()
+        {
+            PrefabId = prefabId,
+            Actions = FuelActions(oxygenMoles, methaneMoles)
+        };
 
-        StartingSpawnScopePatch.Prefix(outerSpawn, out var outerState);
-        try
+    private static List<ActionData> FuelActions(float oxygenMoles, float methaneMoles) =>
+        new()
         {
-            StartingSpawnScopePatch.Prefix(nestedSpawn, out var nestedState);
-            try
-            {
-                nestedState.ShouldBeFalse();
-                StartingSpawnScope.IsActive.ShouldBeTrue();
-            }
-            finally
-            {
-                StartingSpawnScopePatch.Finalizer(null, nestedState);
-            }
-            StartingSpawnScope.IsActive.ShouldBeTrue();
-        }
-        finally
-        {
-            StartingSpawnScopePatch.Finalizer(null, outerState);
-        }
-        StartingSpawnScope.IsActive.ShouldBeFalse();
-    }
-
-    [TestMethod]
-    public async Task ShouldKeepScopeActiveAcrossAsyncWork()
-    {
-        StartingSpawnScope.Enter();
-        try
-        {
-            await Task.Run(() => StartingSpawnScope.IsActive.ShouldBeTrue());
-            StartingSpawnScope.IsActive.ShouldBeTrue();
-        }
-        finally
-        {
-            StartingSpawnScope.Exit();
-        }
-        StartingSpawnScope.IsActive.ShouldBeFalse();
-    }
+            new GasAction { Type = GasType.Oxygen, Moles = oxygenMoles, Celsius = 20f },
+            new GasAction { Type = GasType.Methane, Moles = methaneMoles, Celsius = 20f }
+        };
 }
 
 internal static class StartingFuelMixtureTestExtensions

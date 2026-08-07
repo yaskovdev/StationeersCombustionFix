@@ -30,11 +30,11 @@ Enabled by default. Can be disabled in the StationeersLaunchPad configuration wi
 
 ## Optional Starting Fuel Mixture Fix
 
-The vanilla game's data-driven starting equipment uses a fuel ratio of 67% methane and 33% oxygen. With the corrected combustion reaction, this leaves excess methane in the starting welder and can ignite oxygen-rich surroundings.
+The vanilla game's data-driven spawn recipes use a fuel ratio of 67% methane and 33% oxygen. With the corrected combustion reaction, this leaves excess methane in the starting welder and can ignite oxygen-rich surroundings.
 
-When `PatchStartingFuelMixtures` is enabled, the mod recognizes the exact vanilla 2:1 methane/oxygen mixture in new-world, new-player, and respawn spawn data and changes it to 1:2 while preserving the total quantity and pressure. This covers the built-in welder canister and portable fuel tanks, plus custom start conditions that use the same spawn system. A custom jetpack fuel canister is covered too; the vanilla jetpack currently starts with nitrogen.
+When `PatchStartingFuelMixtures` is enabled, the mod recognizes every exact 2:1 methane/oxygen mixture while spawn data is loaded and changes it to 1:2 while preserving the total quantity and pressure. This covers the built-in fuel tank, fuel packages, starting and tutorial welders, spawn-menu recipes, and compatible custom spawn data. A custom jetpack fuel canister is covered too; the vanilla jetpack currently starts with nitrogen.
 
-Disabled by default. The setting only affects newly spawned equipment; existing tanks and saved contents are not changed.
+Disabled by default. The corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are not changed. Restart the game after changing this setting.
 
 ## Notes
 
@@ -79,7 +79,7 @@ The mod exposes the following BepInEx settings (section `General`):
 
 * `PatchMethaneNitrousReaction` (default `true`): when enabled, also patches the methane + nitrous oxide combustion reaction.
 * `PatchMethaneOzoneReaction` (default `true`): when enabled, also patches the methane + ozone combustion reaction.
-* `PatchStartingFuelMixtures` (default `false`): corrects exact vanilla 2:1 methane/oxygen mixtures in newly spawned starting and respawn equipment to 1:2.
+* `PatchStartingFuelMixtures` (default `false`): corrects exact 2:1 methane/oxygen mixtures in loaded spawn data to 1:2.
 
 The methane + oxygen patch is always applied and cannot be disabled. You can toggle the optional patches in the StationeersLaunchPad configuration window at startup, or by editing the generated `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` file.
 

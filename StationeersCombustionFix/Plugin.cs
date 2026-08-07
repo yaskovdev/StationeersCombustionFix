@@ -66,7 +66,7 @@ public class Plugin : BaseUnityPlugin
             "General",
             "PatchStartingFuelMixtures",
             false,
-            "Correct 2:1 methane + oxygen mixtures in new-world, new-player, and respawn spawn data to 1:2 while preserving total quantity. Supports both vanilla and custom start conditions and only affects newly spawned equipment.");
+            "Correct exact 2:1 methane + oxygen mixtures in loaded spawn data to 1:2 while preserving total quantity. Covers vanilla starts, respawns, tutorials, spawn-menu packages, and compatible custom spawn data. Existing equipment is unchanged. Restart after changing this setting.");
         StartingFuelMixturePatch.PatchStartingFuelMixtures = () => patchStartingFuelMixtures.Value;
 
         var harmony = new Harmony("com.yaskovdev.stationeerscombustionfix");
