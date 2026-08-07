@@ -32,7 +32,7 @@ Enabled by default. Can be disabled in the StationeersLaunchPad configuration wi
 
 The vanilla game's data-driven spawn recipes use a fuel ratio of 67% methane and 33% oxygen. With the corrected combustion reaction, this leaves excess methane in the starting welder and can ignite oxygen-rich surroundings.
 
-When `PatchStartingFuelMixtures` is enabled, the mod recognizes every exact 2:1 methane/oxygen mixture while spawn data is loaded and changes it to 1:2 while preserving the total quantity and pressure. This covers the built-in fuel tank, fuel packages, starting and tutorial welders, spawn-menu recipes, and compatible custom spawn data. A custom jetpack fuel canister is covered too; the vanilla jetpack currently starts with nitrogen.
+When `PatchStartingFuelMixtures` is enabled, the mod recognizes every exact 2:1 methane/oxygen mixture while spawn data is loaded and changes it to 1:2 while preserving the total quantity and pressure. This covers the built-in fuel tank, fuel packages, starting and tutorial welders, creative spawn-menu entries, and compatible custom spawn data. A custom jetpack fuel canister is covered too; the vanilla jetpack currently starts with nitrogen.
 
 Disabled by default. The corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are not changed. Restart the game after changing this setting.
 

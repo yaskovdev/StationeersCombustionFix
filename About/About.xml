@@ -2,7 +2,7 @@
 <ModMetadata xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Stationeers Methane Combustion Fix</Name>
   <Author>yaskovdev</Author>
-  <Version>1.4.0</Version>
+  <Version>1.5.0</Version>
   <Description>This mod is a BepInEx plugin.
 [b]It requires BepInEx with the StationeersLaunchPad plugin to be installed (see Installation below).[/b]
 
@@ -59,7 +59,7 @@ Enabled by default. Can be disabled in the StationeersLaunchPad configuration wi
 [h2]Optional: Starting Fuel Mixtures[/h2]
 The vanilla game's data-driven spawn recipes use a 67% methane / 33% oxygen fuel ratio. With the corrected combustion reaction, that leaves excess methane in the welder and can ignite oxygen-rich surroundings.
 
-Enable PatchStartingFuelMixtures to change every exact 2:1 methane/oxygen mixture in loaded spawn data to the correct 1:2 ratio while preserving total quantity and pressure. It covers the built-in fuel tank, fuel packages, starting and tutorial welders, spawn-menu recipes, and compatible custom spawn data.
+Enable PatchStartingFuelMixtures to change every exact 2:1 methane/oxygen mixture in loaded spawn data to the correct 1:2 ratio while preserving total quantity and pressure. It covers the built-in fuel tank, fuel packages, starting and tutorial welders, creative spawn-menu entries, and compatible custom spawn data.
 
 Disabled by default. Corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are unchanged. Restart the game after changing this setting.
 
