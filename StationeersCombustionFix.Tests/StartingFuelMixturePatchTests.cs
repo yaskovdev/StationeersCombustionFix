@@ -203,6 +203,21 @@ public class StartingFuelMixturePatchTests
         StartingSpawnScope.IsActive.ShouldBeFalse();
     }
 
+    [TestMethod]
+    public async Task ShouldKeepScopeActiveAcrossAsyncWork()
+    {
+        StartingSpawnScope.Enter();
+        try
+        {
+            await Task.Run(() => StartingSpawnScope.IsActive.ShouldBeTrue());
+            StartingSpawnScope.IsActive.ShouldBeTrue();
+        }
+        finally
+        {
+            StartingSpawnScope.Exit();
+        }
+        StartingSpawnScope.IsActive.ShouldBeFalse();
+    }
 }
 
 internal static class StartingFuelMixtureTestExtensions

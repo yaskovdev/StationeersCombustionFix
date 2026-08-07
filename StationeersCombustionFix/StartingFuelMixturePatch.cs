@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Assets.Scripts;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Entities;
@@ -11,29 +12,29 @@ using Trading;
 
 internal static class StartingSpawnScope
 {
-    [ThreadStatic] private static int _depth;
+    private static readonly AsyncLocal<int> Depth = new();
 
-    internal static bool IsActive => _depth > 0;
+    internal static bool IsActive => Depth.Value > 0;
 
     internal static bool ShouldEnter(SpawnData spawnData) =>
         spawnData.EventType != SpawnEvent.None
-        || string.Equals(spawnData.Id, "DefaultNewPlayer", StringComparison.Ordinal)
-        || string.Equals(spawnData.Id, "DefaultRespawnPlayer", StringComparison.Ordinal);
+        || "DefaultNewPlayer".Equals(spawnData.Id, StringComparison.Ordinal)
+        || "DefaultRespawnPlayer".Equals(spawnData.Id, StringComparison.Ordinal);
 
     internal static void Enter()
     {
-        _depth++;
+        Depth.Value++;
     }
 
     internal static void Exit()
     {
-        if (_depth <= 0)
+        if (Depth.Value <= 0)
         {
             Plugin.Logger?.LogError("Starting spawn scope was exited without a matching entry");
-            _depth = 0;
+            Depth.Value = 0;
             return;
         }
-        _depth--;
+        Depth.Value--;
     }
 }
 
@@ -88,7 +89,7 @@ internal static class StartingFuelMixturePatch
 
         __state = __instance.Actions;
         __instance.Actions = correctedActions;
-        Plugin.Logger?.LogInfo($"Corrected legacy methane + oxygen mixture for starting spawn '{__instance.PrefabId}'.");
+        Plugin.Logger?.LogInfo($"Corrected legacy methane + oxygen mixture for starting spawn '{__instance.PrefabId}'");
     }
 
     [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Harmony relies on the argument names")]
