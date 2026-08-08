@@ -109,3 +109,8 @@ The same steps apply for both the initial publish and subsequent updates.
 1. Update the version in both `StationeersCombustionFix/StationeersCombustionFix.csproj` and `About/About.xml`. Keep the two values identical.
 2. Run `.\Build-Plugin.ps1` to build and deploy the mod locally.
 3. Launch Stationeers, then go to Workshop. You'll see the mod and the Publish/Update button.
+
+## Compatibility and Dependency Maintenance
+
+* `.github/workflows/daily-game-compatibility.yml` runs every three hours (and on pushes to `master` or manually), downloads only the required files from the public Stationeers dedicated-server depot, and tests against the current game data. Downloaded game files are temporary.
+* NuGet versions are pinned by the committed `packages.lock.json` files. To update dependencies, edit the relevant `PackageReference` if needed, run `dotnet restore StationeersCombustionFix.sln --force-evaluate`, test, and commit the resulting project and lock-file changes together. CI uses `--locked-mode`, so stale lock files fail the build.

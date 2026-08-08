@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: "17 4 * * *"
+    - cron: "0 */3 * * *"
   workflow_dispatch:
 
 permissions:
@@ -58,7 +58,7 @@ jobs:
 
           echo "path=$install_dir/DepotDownloader" >> "$GITHUB_OUTPUT"
 
-      - name: Download current Stationeers compatibility inputs
+      - name: Download current Stationeers assemblies and resources
         id: stationeers
         shell: bash
         env:
