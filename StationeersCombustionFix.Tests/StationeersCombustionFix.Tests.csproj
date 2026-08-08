@@ -37,6 +37,10 @@
     <ItemGroup>
         <None Include="$(GameDir)/rocketstation_Data/Managed/UnityEngine.dll" Link="UnityEngine.dll" CopyToOutputDirectory="PreserveNewest"/>
         <None Include="$(GameDir)/rocketstation_Data/Managed/UnityEngine.CoreModule.dll" Link="UnityEngine.CoreModule.dll" CopyToOutputDirectory="PreserveNewest"/>
+        <None Include="$(GameDir)/rocketstation_Data/StreamingAssets/Data/startconditions.xml"
+              Link="startconditions.xml"
+              CopyToOutputDirectory="PreserveNewest"
+              Condition="Exists('$(GameDir)/rocketstation_Data/StreamingAssets/Data/startconditions.xml')"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">

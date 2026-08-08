@@ -1,6 +1,4 @@
-# Stationeers Combustion Fix
-
-[![Daily game compatibility](https://github.com/yaskovdev/StationeersCombustionFix/actions/workflows/daily-game-compatibility.yml/badge.svg)](https://github.com/yaskovdev/StationeersCombustionFix/actions/workflows/daily-game-compatibility.yml)
+# Stationeers Combustion Fix [![Daily game compatibility](https://github.com/yaskovdev/StationeersCombustionFix/actions/workflows/daily-game-compatibility.yml/badge.svg)](https://github.com/yaskovdev/StationeersCombustionFix/actions/workflows/daily-game-compatibility.yml)
 
 Fixes incorrect methane combustion reactions to be chemically accurate.
 
@@ -91,7 +89,7 @@ The project requires a reference to `Assembly-CSharp.dll` from your local Statio
 
 Running unit tests additionally requires `UnityEngine.dll` and `UnityEngine.CoreModule.dll` from your local Stationeers installation.
 
-GitHub Actions also runs the tests daily against the current Windows dedicated-server assemblies downloaded anonymously from Steam. The game assemblies remain ephemeral and are not committed or uploaded as workflow artifacts.
+GitHub Actions also runs the tests daily against the current Windows dedicated-server assemblies and start-condition data downloaded anonymously from Steam. The game files remain ephemeral and are not committed or uploaded as workflow artifacts.
 
 1. Copy `Directory.Build.props.example` to `Directory.Build.props` (in the repository root):
    ```

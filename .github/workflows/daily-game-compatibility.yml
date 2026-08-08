@@ -58,7 +58,7 @@ jobs:
 
           echo "path=$install_dir/DepotDownloader" >> "$GITHUB_OUTPUT"
 
-      - name: Download current Stationeers assemblies
+      - name: Download current Stationeers compatibility inputs
         id: stationeers
         shell: bash
         env:
@@ -71,11 +71,14 @@ jobs:
           file_list="$RUNNER_TEMP/stationeers-files.txt"
           managed_dir="$download_dir/rocketstation_DedicatedServer_Data/Managed"
           staged_managed_dir="$game_dir/rocketstation_Data/Managed"
+          start_conditions="$download_dir/rocketstation_DedicatedServer_Data/StreamingAssets/Data/startconditions.xml"
+          staged_data_dir="$game_dir/rocketstation_Data/StreamingAssets/Data"
 
           printf '%s\n' \
             "rocketstation_DedicatedServer_Data/Managed/Assembly-CSharp.dll" \
             "rocketstation_DedicatedServer_Data/Managed/UnityEngine.dll" \
             "rocketstation_DedicatedServer_Data/Managed/UnityEngine.CoreModule.dll" \
+            "rocketstation_DedicatedServer_Data/StreamingAssets/Data/startconditions.xml" \
             > "$file_list"
 
           for attempt in 1 2 3; do
@@ -106,9 +109,17 @@ jobs:
             cp "$managed_dir/$assembly" "$staged_managed_dir/$assembly"
           done
 
+          if [[ ! -f "$start_conditions" ]]; then
+            echo "::error::Steam depot did not contain startconditions.xml"
+            exit 1
+          fi
+          mkdir -p "$staged_data_dir"
+          cp "$start_conditions" "$staged_data_dir/startconditions.xml"
+
           game_version="$(strings "$staged_managed_dir/Assembly-CSharp.dll" \
             | awk '/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/{version=$0} END{print version}')"
           assembly_sha="$(sha256sum "$staged_managed_dir/Assembly-CSharp.dll" | cut -d ' ' -f 1)"
+          start_conditions_sha="$(sha256sum "$staged_data_dir/startconditions.xml" | cut -d ' ' -f 1)"
 
           echo "Testing Stationeers ${game_version:-unknown}"
           echo "game_dir=$game_dir" >> "$GITHUB_OUTPUT"
@@ -119,6 +130,7 @@ jobs:
             echo "- Version: \`${game_version:-unknown}\`"
             echo "- Steam app/depot: \`$STATIONEERS_APP_ID/$STATIONEERS_DEPOT_ID\`"
             echo "- Assembly-CSharp SHA-256: \`$assembly_sha\`"
+            echo "- startconditions.xml SHA-256: \`$start_conditions_sha\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Restore dependencies
