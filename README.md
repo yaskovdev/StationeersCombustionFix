@@ -1,5 +1,7 @@
 # Stationeers Combustion Fix
 
+[![Daily game compatibility](https://github.com/yaskovdev/StationeersCombustionFix/actions/workflows/daily-game-compatibility.yml/badge.svg)](https://github.com/yaskovdev/StationeersCombustionFix/actions/workflows/daily-game-compatibility.yml)
+
 Fixes incorrect methane combustion reactions to be chemically accurate.
 
 ![Stationeers Combustion Fix](About/Preview.png)
@@ -88,6 +90,8 @@ The methane + oxygen patch is always applied and cannot be disabled. You can tog
 The project requires a reference to `Assembly-CSharp.dll` from your local Stationeers installation. This file is not included in the repository.
 
 Running unit tests additionally requires `UnityEngine.dll` and `UnityEngine.CoreModule.dll` from your local Stationeers installation.
+
+GitHub Actions also runs the tests daily against the current Windows dedicated-server assemblies downloaded anonymously from Steam. The game assemblies remain ephemeral and are not committed or uploaded as workflow artifacts.
 
 1. Copy `Directory.Build.props.example` to `Directory.Build.props` (in the repository root):
    ```

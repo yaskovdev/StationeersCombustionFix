@@ -1,0 +1,132 @@
+name: Daily game compatibility
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-game-compatibility
+  cancel-in-progress: true
+
+env:
+  DEPOT_DOWNLOADER_VERSION: "3.4.0"
+  DEPOT_DOWNLOADER_SHA256: "a999dec66b4850fc961bd50366696d23c2d0fad7b18790e6a5647b2f19097a53"
+  STATIONEERS_APP_ID: "600760"
+  STATIONEERS_DEPOT_ID: "600761"
+
+jobs:
+  test:
+    name: Test current Stationeers assemblies
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: "8.0.x"
+          cache: true
+          cache-dependency-path: |
+            StationeersCombustionFix/packages.lock.json
+            StationeersCombustionFix.Tests/packages.lock.json
+
+      - name: Install DepotDownloader
+        id: depot_downloader
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          archive="$RUNNER_TEMP/depotdownloader.zip"
+          install_dir="$RUNNER_TEMP/depotdownloader"
+          url="https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_${DEPOT_DOWNLOADER_VERSION}/DepotDownloader-linux-x64.zip"
+
+          curl --fail --location --retry 3 --retry-all-errors "$url" --output "$archive"
+          printf '%s  %s\n' "$DEPOT_DOWNLOADER_SHA256" "$archive" | sha256sum --check
+          mkdir -p "$install_dir"
+          unzip -q "$archive" -d "$install_dir"
+          chmod +x "$install_dir/DepotDownloader"
+
+          echo "path=$install_dir/DepotDownloader" >> "$GITHUB_OUTPUT"
+
+      - name: Download current Stationeers assemblies
+        id: stationeers
+        shell: bash
+        env:
+          DEPOT_DOWNLOADER: ${{ steps.depot_downloader.outputs.path }}
+        run: |
+          set -euo pipefail
+
+          download_dir="$RUNNER_TEMP/stationeers-server"
+          game_dir="$RUNNER_TEMP/stationeers"
+          file_list="$RUNNER_TEMP/stationeers-files.txt"
+          managed_dir="$download_dir/rocketstation_DedicatedServer_Data/Managed"
+          staged_managed_dir="$game_dir/rocketstation_Data/Managed"
+
+          printf '%s\n' \
+            "rocketstation_DedicatedServer_Data/Managed/Assembly-CSharp.dll" \
+            "rocketstation_DedicatedServer_Data/Managed/UnityEngine.dll" \
+            "rocketstation_DedicatedServer_Data/Managed/UnityEngine.CoreModule.dll" \
+            > "$file_list"
+
+          for attempt in 1 2 3; do
+            if "$DEPOT_DOWNLOADER" \
+              -app "$STATIONEERS_APP_ID" \
+              -depot "$STATIONEERS_DEPOT_ID" \
+              -branch public \
+              -filelist "$file_list" \
+              -dir "$download_dir" \
+              -validate; then
+              break
+            fi
+
+            if [[ "$attempt" -eq 3 ]]; then
+              echo "::error::DepotDownloader failed after $attempt attempts"
+              exit 1
+            fi
+
+            sleep "$((attempt * 10))"
+          done
+
+          mkdir -p "$staged_managed_dir"
+          for assembly in Assembly-CSharp.dll UnityEngine.dll UnityEngine.CoreModule.dll; do
+            if [[ ! -f "$managed_dir/$assembly" ]]; then
+              echo "::error::Steam depot did not contain $assembly"
+              exit 1
+            fi
+            cp "$managed_dir/$assembly" "$staged_managed_dir/$assembly"
+          done
+
+          game_version="$(strings "$staged_managed_dir/Assembly-CSharp.dll" \
+            | awk '/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/{version=$0} END{print version}')"
+          assembly_sha="$(sha256sum "$staged_managed_dir/Assembly-CSharp.dll" | cut -d ' ' -f 1)"
+
+          echo "Testing Stationeers ${game_version:-unknown}"
+          echo "game_dir=$game_dir" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Stationeers assemblies"
+            echo
+            echo "- Version: \`${game_version:-unknown}\`"
+            echo "- Steam app/depot: \`$STATIONEERS_APP_ID/$STATIONEERS_DEPOT_ID\`"
+            echo "- Assembly-CSharp SHA-256: \`$assembly_sha\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Restore dependencies
+        env:
+          GAME_DIR: ${{ steps.stationeers.outputs.game_dir }}
+        run: dotnet restore StationeersCombustionFix.sln --locked-mode -p:GameDir="$GAME_DIR"
+
+      - name: Run tests
+        env:
+          GAME_DIR: ${{ steps.stationeers.outputs.game_dir }}
+        run: dotnet test StationeersCombustionFix.sln --configuration Release --no-restore --nologo --verbosity normal -p:GameDir="$GAME_DIR"
