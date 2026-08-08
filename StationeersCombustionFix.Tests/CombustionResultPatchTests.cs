@@ -25,7 +25,7 @@ public class CombustionResultPatchTests
     public void ShouldPatchMethaneOxygenResult()
     {
         var result = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultMethaneOxygen);
+        result.ShouldBeEquivalentTo(Combustion.ResultMethaneOxygen, $"{nameof(Combustion.ResultMethaneOxygen)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(2.0));
@@ -39,7 +39,7 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchMethaneNitrousReaction = () => true;
         var result = new CombustionResult(1.0, 1.0, new CombustionValue[] { new(GasType.CarbonDioxide, 2.0), new(GasType.Nitrogen, 2.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultMethaneNitrous);
+        result.ShouldBeEquivalentTo(Combustion.ResultMethaneNitrous, $"{nameof(Combustion.ResultMethaneNitrous)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(4.0));
@@ -52,7 +52,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchMethaneNitrousResultWhenDisabled()
     {
         var result = new CombustionResult(1.0, 1.0, new CombustionValue[] { new(GasType.CarbonDioxide, 2.0), new(GasType.Nitrogen, 2.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultMethaneNitrous);
+        result.ShouldBeEquivalentTo(Combustion.ResultMethaneNitrous, $"{nameof(Combustion.ResultMethaneNitrous)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         var originalFuelMoleCount = result.FuelMoleCount;
         var originalOxidiserMoleCount = result.OxidiserMoleCount;
         var originalOutputs = result.Outputs;
@@ -71,7 +71,7 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchMethaneOzoneReaction = () => true;
         var result = new CombustionResult(3.0, 2.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultMethaneOzone);
+        result.ShouldBeEquivalentTo(Combustion.ResultMethaneOzone, $"{nameof(Combustion.ResultMethaneOzone)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(3.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(4.0));
@@ -84,7 +84,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchMethaneOzoneResultWhenDisabled()
     {
         var result = new CombustionResult(3.0, 2.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0), new(GasType.Steam, 1.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultMethaneOzone);
+        result.ShouldBeEquivalentTo(Combustion.ResultMethaneOzone, $"{nameof(Combustion.ResultMethaneOzone)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         var originalFuelMoleCount = result.FuelMoleCount;
         var originalOxidiserMoleCount = result.OxidiserMoleCount;
         var originalOutputs = result.Outputs;
@@ -103,7 +103,7 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchHydrogenOxygenReaction = () => true;
         var result = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Steam, 3.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOxygen);
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOxygen, $"{nameof(Combustion.ResultHydrogenOxygen)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(2.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(1.0));
@@ -116,7 +116,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchHydrogenOxygenResultWhenDisabled()
     {
         var result = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Steam, 3.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOxygen);
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOxygen, $"{nameof(Combustion.ResultHydrogenOxygen)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         var originalFuelMoleCount = result.FuelMoleCount;
         var originalOxidiserMoleCount = result.OxidiserMoleCount;
         var originalOutputs = result.Outputs;
@@ -135,7 +135,7 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchHydrogenOzoneReaction = () => true;
         var result = new CombustionResult(3.0, 1.0, new CombustionValue[] { new(GasType.Steam, 4.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOzone);
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOzone, $"{nameof(Combustion.ResultHydrogenOzone)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(3.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(1.0));
@@ -148,7 +148,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchHydrogenOzoneResultWhenDisabled()
     {
         var result = new CombustionResult(3.0, 1.0, new CombustionValue[] { new(GasType.Steam, 4.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOzone);
+        result.ShouldBeEquivalentTo(Combustion.ResultHydrogenOzone, $"{nameof(Combustion.ResultHydrogenOzone)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         var originalFuelMoleCount = result.FuelMoleCount;
         var originalOxidiserMoleCount = result.OxidiserMoleCount;
         var originalOutputs = result.Outputs;
@@ -167,7 +167,7 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchAlcoholOxygenReaction = () => true;
         var result = new CombustionResult(1.0, 3.0, new CombustionValue[] { new(GasType.CarbonDioxide, 8.0), new(GasType.Steam, 2.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOxygen);
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOxygen, $"{nameof(Combustion.ResultAlcoholOxygen)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(3.0));
@@ -180,7 +180,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchAlcoholOxygenResultWhenDisabled()
     {
         var result = new CombustionResult(1.0, 3.0, new CombustionValue[] { new(GasType.CarbonDioxide, 8.0), new(GasType.Steam, 2.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOxygen);
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOxygen, $"{nameof(Combustion.ResultAlcoholOxygen)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         var originalFuelMoleCount = result.FuelMoleCount;
         var originalOxidiserMoleCount = result.OxidiserMoleCount;
         var originalOutputs = result.Outputs;
@@ -199,7 +199,7 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchAlcoholNitrousReaction = () => true;
         var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.Nitrogen, 4.0), new(GasType.Steam, 2.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholNitrous);
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholNitrous, $"{nameof(Combustion.ResultAlcoholNitrous)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(6.0));
@@ -212,7 +212,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchAlcoholNitrousResultWhenDisabled()
     {
         var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.Nitrogen, 4.0), new(GasType.Steam, 2.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholNitrous);
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholNitrous, $"{nameof(Combustion.ResultAlcoholNitrous)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         var originalFuelMoleCount = result.FuelMoleCount;
         var originalOxidiserMoleCount = result.OxidiserMoleCount;
         var originalOutputs = result.Outputs;
@@ -231,7 +231,7 @@ public class CombustionResultPatchTests
     {
         CombustionResultPatch.PatchAlcoholOzoneReaction = () => true;
         var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 3.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOzone);
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOzone, $"{nameof(Combustion.ResultAlcoholOzone)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         CombustionResultPatch.Postfix(result);
         result.FuelMoleCount.ShouldBe(new MoleQuantity(1.0));
         result.OxidiserMoleCount.ShouldBe(new MoleQuantity(2.0));
@@ -244,7 +244,7 @@ public class CombustionResultPatchTests
     public void ShouldNotPatchAlcoholOzoneResultWhenDisabled()
     {
         var result = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 3.0) });
-        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOzone);
+        result.ShouldBeEquivalentTo(Combustion.ResultAlcoholOzone, $"{nameof(Combustion.ResultAlcoholOzone)} no longer matches expected values. {nameof(CombustionResult)} likely changed in a game update; review and update this patch/test");
         var originalFuelMoleCount = result.FuelMoleCount;
         var originalOxidiserMoleCount = result.OxidiserMoleCount;
         var originalOutputs = result.Outputs;
