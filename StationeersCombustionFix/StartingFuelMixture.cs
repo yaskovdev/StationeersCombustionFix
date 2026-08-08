@@ -50,11 +50,11 @@ internal static class StartingFuelMixture
         var methaneTemperature = mixture.Methane.GetTemperature();
         var oxygenTemperature = mixture.Oxygen.GetTemperature();
 
-        // Energy is total, so preserving it while changing the amount would change the resulting temperature.
         if (methaneAmount is not null
             && oxygenAmount is not null
             && methaneTemperature is not null
             && oxygenTemperature is not null
+            // Energy is total, so preserving it while changing the amount would change the resulting temperature.
             && float.IsNaN(mixture.Methane.Energy)
             && float.IsNaN(mixture.Oxygen.Energy)
             && methaneAmount.Unit == AmountUnit.Moles
