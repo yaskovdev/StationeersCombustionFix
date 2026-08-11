@@ -34,7 +34,7 @@ The vanilla game's data-driven spawn recipes use a fuel ratio of 67% methane and
 
 When `PatchStartingFuelMixtures` is enabled, the mod recognizes every exact 2:1 methane/oxygen mixture while spawn data is loaded and changes it to 1:2 while preserving the total quantity and pressure. This covers the built-in fuel tank, fuel packages, starting and tutorial welders, creative spawn-menu entries, and compatible custom spawn data. A custom jetpack fuel canister is covered too; the vanilla jetpack currently starts with nitrogen.
 
-Disabled by default. The corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are not changed. Restart the game after changing this setting.
+Enabled by default. It can be disabled in the mod configuration. The corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are not changed. Restart the game after changing this setting.
 
 ## Notes
 
@@ -79,7 +79,12 @@ The mod exposes the following BepInEx settings (section `General`):
 
 * `PatchMethaneNitrousReaction` (default `true`): when enabled, also patches the methane + nitrous oxide combustion reaction.
 * `PatchMethaneOzoneReaction` (default `true`): when enabled, also patches the methane + ozone combustion reaction.
-* `PatchStartingFuelMixtures` (default `false`): corrects exact 2:1 methane/oxygen mixtures in loaded spawn data to 1:2.
+* `PatchHydrogenOxygenReaction` (default `false`): patches the hydrogen + oxygen combustion reaction.
+* `PatchHydrogenOzoneReaction` (default `false`): patches the hydrogen + ozone combustion reaction.
+* `PatchAlcoholOxygenReaction` (default `false`): patches the alcohol + oxygen combustion reaction, treating alcohol as ethanol.
+* `PatchAlcoholNitrousReaction` (default `false`): patches the alcohol + nitrous oxide combustion reaction, treating alcohol as ethanol.
+* `PatchAlcoholOzoneReaction` (default `false`): patches the alcohol + ozone combustion reaction, treating alcohol as ethanol.
+* `PatchStartingFuelMixtures` (default `true`): corrects exact 2:1 methane/oxygen mixtures in loaded spawn data to 1:2.
 
 The methane + oxygen patch is always applied and cannot be disabled. You can toggle the optional patches in the StationeersLaunchPad configuration window at startup, or by editing the generated `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` file.
 
@@ -89,7 +94,7 @@ The project requires a reference to `Assembly-CSharp.dll` from your local Statio
 
 Running unit tests additionally requires `UnityEngine.dll` and `UnityEngine.CoreModule.dll` from your local Stationeers installation.
 
-GitHub Actions also runs the tests daily against the current Windows dedicated-server assemblies and start-condition data downloaded anonymously from Steam. The game files remain ephemeral and are not committed or uploaded as workflow artifacts.
+GitHub Actions also runs the tests every three hours against the current Windows dedicated-server assemblies and start-condition data downloaded anonymously from Steam. The game files remain ephemeral and are not committed or uploaded as workflow artifacts.
 
 1. Copy `Directory.Build.props.example` to `Directory.Build.props` (in the repository root):
    ```

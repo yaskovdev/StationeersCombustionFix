@@ -10,7 +10,7 @@ internal static class StartingFuelMixturePatch
 {
     /// <summary>
     /// Returns whether vanilla spawn-data fuel mixtures should be corrected. Wired to the BepInEx configuration in
-    /// <see cref="Plugin.Awake"/> and defaults to false.
+    /// <see cref="Plugin.Awake"/>; the pre-initialization fallback remains false.
     /// </summary>
     internal static Func<bool> PatchStartingFuelMixtures = () => false;
 

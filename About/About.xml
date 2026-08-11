@@ -2,7 +2,7 @@
 <ModMetadata xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Stationeers Methane Combustion Fix</Name>
   <Author>yaskovdev</Author>
-  <Version>1.5.0</Version>
+  <Version>1.6.0</Version>
   <Description>This mod is a BepInEx plugin.
 [b]It requires BepInEx with the StationeersLaunchPad plugin to be installed (see Installation below).[/b]
 
@@ -13,7 +13,7 @@ Notes:
 [list]
 [*] Works with existing saves. The mod does not modify save files, so it can be safely enabled or disabled at any time.
 [*] Applies corrections at the reaction-definition level, so fuel allocation, consumption, and exhaust calculations use consistent stoichiometry. A correctly mixed welder therefore leaves no unburned fuel.
-[*] Can also correct the methane + oxygen fuel mixture in starting and respawn equipment. This feature is disabled by default. Enable PatchStartingFuelMixtures in the mod configuration.
+[*] Corrects the methane + oxygen fuel mixture in starting and respawn equipment by default. Disable PatchStartingFuelMixtures in the mod configuration to opt out.
 [*] Tested with the Gas Fuel Generator (GFG). Combustion reaches the expected 90% ratio.
 [/list]
 
@@ -61,7 +61,7 @@ The vanilla game's data-driven spawn recipes use a 67% methane / 33% oxygen fuel
 
 Enable PatchStartingFuelMixtures to change every exact 2:1 methane/oxygen mixture in loaded spawn data to the correct 1:2 ratio while preserving total quantity and pressure. It covers the built-in fuel tank, fuel packages, starting and tutorial welders, creative spawn-menu entries, and compatible custom spawn data.
 
-Disabled by default. Corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are unchanged. Restart the game after changing this setting.
+Enabled by default. It can be disabled in the mod configuration. Corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are unchanged. Restart the game after changing this setting.
 
 [h2]Experimental: Hydrogen and Alcohol[/h2]
 The mod also corrects the hydrogen and alcohol combustion reactions. Alcohol is treated as ethanol (C2H6O). These are experimental and disabled by default. You can enable them individually in the mod config in StationeersLaunchPad.

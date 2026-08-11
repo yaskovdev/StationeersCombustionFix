@@ -1,6 +1,7 @@
 ﻿namespace StationeersCombustionFix.Tests;
 
 using System.Collections.Immutable;
+using System.Reflection;
 using Assets.Scripts.Atmospherics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
@@ -19,6 +20,40 @@ public class CombustionResultPatchTests
         CombustionResultPatch.PatchAlcoholOxygenReaction = () => false;
         CombustionResultPatch.PatchAlcoholNitrousReaction = () => false;
         CombustionResultPatch.PatchAlcoholOzoneReaction = () => false;
+    }
+
+    [TestMethod]
+    public void ShouldPatchEveryCombustionResultField()
+    {
+        var expectedFieldNames = new[]
+            {
+                nameof(CombustionResult.FuelMoleCount),
+                nameof(CombustionResult.OxidiserMoleCount),
+                nameof(CombustionResult.Outputs),
+                nameof(CombustionResult.OxidiserRatio),
+                nameof(CombustionResult.FuelRatio)
+            }
+            .OrderBy(name => name, StringComparer.Ordinal)
+            .ToArray();
+        var fields = GetInstanceFields(typeof(CombustionResult))
+            .OrderBy(field => field.Name, StringComparer.Ordinal)
+            .ToArray();
+
+        fields
+            .Select(field => field.Name)
+            .ShouldBe(expectedFieldNames, "CombustionResult fields changed in a game update; review whether CombustionResultPatch.Patch must handle the new state");
+
+        var source = new CombustionResult(2.0, 1.0, new CombustionValue[] { new(GasType.Pollutant, 3.0), new(GasType.CarbonDioxide, 6.0) });
+        var expected = new CombustionResult(1.0, 2.0, new CombustionValue[] { new(GasType.CarbonDioxide, 1.0), new(GasType.Steam, 2.0) });
+
+        CombustionResultPatch.Postfix(source);
+
+        foreach (var field in fields)
+        {
+            field
+                .GetValue(source)
+                .ShouldBeEquivalentTo(field.GetValue(expected), $"{nameof(CombustionResultPatch)} did not update {nameof(CombustionResult)}.{field.Name} to the state produced by its constructor");
+        }
     }
 
     [TestMethod]
@@ -284,5 +319,20 @@ public class CombustionResultPatchTests
                 result.OxidiserRatio.ShouldBe(originalOxidiserRatio);
                 result.FuelRatio.ShouldBe(originalFuelRatio);
             });
+    }
+
+    private static IEnumerable<FieldInfo> GetInstanceFields(Type type)
+    {
+        for (var current = type; current != null && current != typeof(object); current = current.BaseType)
+        {
+            foreach (var field in current.GetFields(
+                         BindingFlags.Instance
+                         | BindingFlags.Public
+                         | BindingFlags.NonPublic
+                         | BindingFlags.DeclaredOnly))
+            {
+                yield return field;
+            }
+        }
     }
 }
