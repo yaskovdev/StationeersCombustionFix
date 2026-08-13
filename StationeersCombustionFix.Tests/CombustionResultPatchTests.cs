@@ -325,11 +325,7 @@ public class CombustionResultPatchTests
     {
         for (var current = type; current != null && current != typeof(object); current = current.BaseType)
         {
-            foreach (var field in current.GetFields(
-                         BindingFlags.Instance
-                         | BindingFlags.Public
-                         | BindingFlags.NonPublic
-                         | BindingFlags.DeclaredOnly))
+            foreach (var field in current.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
             {
                 yield return field;
             }

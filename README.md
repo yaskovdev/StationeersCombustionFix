@@ -118,5 +118,6 @@ The same steps apply for both the initial publish and subsequent updates.
 ## Compatibility and Dependency Maintenance
 
 * `.github/workflows/daily-game-compatibility.yml` runs every three hours (and on pushes to `master` or manually), downloads only the required files from the public Stationeers dedicated-server depot, and tests against the current game data. Downloaded game files are temporary.
+* After Steam updates Stationeers, run `dotnet clean --configuration Release` and `dotnet test --configuration Release` to test against the new local game files. If the tests pass, no repository changes are needed; after a major game update, also perform an in-game smoke test.
 * NuGet versions are pinned by the committed `packages.lock.json` files. To update dependencies, edit the relevant `PackageReference` if needed, run `dotnet restore StationeersCombustionFix.sln --force-evaluate`, test, and commit the resulting project and lock-file changes together. CI uses `--locked-mode`, so stale lock files fail the build.
 * GitHub disables scheduled workflows in public repositories after 60 days without repository activity. If this happens, re-enable this workflow from the Actions tab or run `gh workflow enable daily-game-compatibility.yml`.

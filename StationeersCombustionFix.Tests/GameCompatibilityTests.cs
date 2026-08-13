@@ -46,7 +46,7 @@ public class GameCompatibilityTests
         var startConditionsPath = Path.Combine(AppContext.BaseDirectory, "startconditions.xml");
         if (!File.Exists(startConditionsPath))
         {
-            if (Environment.GetEnvironmentVariable("CI")?.Equals("true", StringComparison.OrdinalIgnoreCase) == true)
+            if (string.Equals(Environment.GetEnvironmentVariable("CI"), "true", StringComparison.OrdinalIgnoreCase))
             {
                 Assert.Fail($"The game data file was not copied to {startConditionsPath}.");
             }
@@ -97,7 +97,7 @@ public class GameCompatibilityTests
 
     private static bool TryGetMoles(XElement gas, out float moles)
     {
-        moles = default;
+        moles = 0;
         return gas.Attribute("Litres") is null
                && float.TryParse(gas.Attribute("Moles")?.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out moles)
                && moles > 0
