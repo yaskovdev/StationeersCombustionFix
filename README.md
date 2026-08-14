@@ -26,7 +26,47 @@ Replaces the incorrect reaction `3 CH₄ + 2 O₃ → 6 CO₂ + 3 Pol + H₂O` w
 
 Recommended fuel mixture: 42% methane, 58% ozone.
 
-Enabled by default. Can be disabled in the StationeersLaunchPad configuration window or in `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` (where `<GameDir>` is the game folder, e.g. `C:\Program Files (x86)\Steam\steamapps\common\Stationeers`).
+Enabled by default.
+
+## Hydrogen + Oxygen
+
+Replaces the incorrect reaction `2 H₂ + O₂ → 3 H₂O` with the correct reaction `2 H₂ + O₂ → 2 H₂O`.
+
+Recommended fuel mixture: 67% hydrogen, 33% oxygen.
+
+Disabled by default.
+
+## Hydrogen + Ozone
+
+Replaces the incorrect reaction `3 H₂ + O₃ → 4 H₂O` with the correct reaction `3 H₂ + O₃ → 3 H₂O`.
+
+Recommended fuel mixture: 75% hydrogen, 25% ozone.
+
+Disabled by default.
+
+## Alcohol + Oxygen
+
+Replaces the incorrect reaction `Alc + 3 O₂ → 8 CO₂ + 2 H₂O` with the correct reaction `C₂H₆O + 3 O₂ → 2 CO₂ + 3 H₂O`, treating alcohol as ethanol.
+
+Recommended fuel mixture: 25% alcohol, 75% oxygen.
+
+Disabled by default.
+
+## Alcohol + Nitrous Oxide
+
+Replaces the incorrect reaction `Alc + 2 N₂O → 4 N₂ + 2 H₂O` with the correct reaction `C₂H₆O + 6 N₂O → 2 CO₂ + 3 H₂O + 6 N₂`, treating alcohol as ethanol.
+
+Recommended fuel mixture: 14% alcohol, 86% nitrous oxide.
+
+Disabled by default.
+
+## Alcohol + Ozone
+
+Replaces the incorrect reaction `Alc + 2 O₃ → CO₂ + 3 H₂O` with the correct reaction `C₂H₆O + 2 O₃ → 2 CO₂ + 3 H₂O`, treating alcohol as ethanol.
+
+Recommended fuel mixture: 33% alcohol, 67% ozone.
+
+Disabled by default.
 
 ## Optional Starting Fuel Mixture Fix
 
