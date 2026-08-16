@@ -4,69 +4,30 @@ Fixes incorrect methane combustion reactions to be chemically accurate.
 
 ![Stationeers Combustion Fix](About/Preview.png)
 
-## Methane + Oxygen
+This mod is a BepInEx plugin. **It requires BepInEx with the StationeersLaunchPad plugin to be installed.** See the [StationeersLaunchPad repository](https://github.com/StationeersLaunchPad/StationeersLaunchPad) for the detailed install guide.
 
-Replaces the incorrect reaction `2 CH₄ + O₂ → 6 CO₂ + 3 Pol` with the correct reaction `CH₄ + 2 O₂ → CO₂ + 2 H₂O`.
+BepInEx only loads plugins from its own `BepInEx/plugins` folder, while subscribed Workshop mods live in Steam's workshop content folder. StationeersLaunchPad is the loader that bridges the two: it discovers the subscribed mod and hands its assembly to BepInEx. Without a loader, a subscribed-only mod is downloaded but never loaded.
 
-Recommended fuel mixture: 33% methane, 67% oxygen.
+## Notes
 
-Always enabled.
+* The mod does not modify save files, so it can be safely enabled or disabled at any time.
+* Applies corrections at the reaction-definition level, so fuel allocation, consumption, and exhaust calculations use consistent stoichiometry. A correctly mixed welder therefore leaves no unburned fuel.
+* Tested with the Gas Fuel Generator (GFG). Combustion reaches the expected 90% ratio.
 
-## Methane + Nitrous Oxide
+## Combustion Reaction Fixes
 
-Replaces the incorrect reaction `CH₄ + N₂O → 2 CO₂ + 2 N₂` with the correct reaction `CH₄ + 4 N₂O → CO₂ + 2 H₂O + 4 N₂`.
+Hydrogen and alcohol reactions are experimental and disabled by default. Alcohol is treated as ethanol (`C₂H₆O`).
 
-Recommended fuel mixture: 20% methane, 80% nitrous oxide.
-
-Enabled by default. Can be disabled in the StationeersLaunchPad configuration window or in `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` (where `<GameDir>` is the game folder, e.g. `C:\Program Files (x86)\Steam\steamapps\common\Stationeers`).
-
-## Methane + Ozone
-
-Replaces the incorrect reaction `3 CH₄ + 2 O₃ → 6 CO₂ + 3 Pol + H₂O` with the correct reaction `3 CH₄ + 4 O₃ → 3 CO₂ + 6 H₂O`.
-
-Recommended fuel mixture: 42% methane, 58% ozone.
-
-Enabled by default.
-
-## Hydrogen + Oxygen
-
-Replaces the incorrect reaction `2 H₂ + O₂ → 3 H₂O` with the correct reaction `2 H₂ + O₂ → 2 H₂O`.
-
-Recommended fuel mixture: 67% hydrogen, 33% oxygen.
-
-Disabled by default.
-
-## Hydrogen + Ozone
-
-Replaces the incorrect reaction `3 H₂ + O₃ → 4 H₂O` with the correct reaction `3 H₂ + O₃ → 3 H₂O`.
-
-Recommended fuel mixture: 75% hydrogen, 25% ozone.
-
-Disabled by default.
-
-## Alcohol + Oxygen
-
-Replaces the incorrect reaction `Alc + 3 O₂ → 8 CO₂ + 2 H₂O` with the correct reaction `C₂H₆O + 3 O₂ → 2 CO₂ + 3 H₂O`, treating alcohol as ethanol.
-
-Recommended fuel mixture: 25% alcohol, 75% oxygen.
-
-Disabled by default.
-
-## Alcohol + Nitrous Oxide
-
-Replaces the incorrect reaction `Alc + 2 N₂O → 4 N₂ + 2 H₂O` with the correct reaction `C₂H₆O + 6 N₂O → 2 CO₂ + 3 H₂O + 6 N₂`, treating alcohol as ethanol.
-
-Recommended fuel mixture: 14% alcohol, 86% nitrous oxide.
-
-Disabled by default.
-
-## Alcohol + Ozone
-
-Replaces the incorrect reaction `Alc + 2 O₃ → CO₂ + 3 H₂O` with the correct reaction `C₂H₆O + 2 O₃ → 2 CO₂ + 3 H₂O`, treating alcohol as ethanol.
-
-Recommended fuel mixture: 33% alcohol, 67% ozone.
-
-Disabled by default.
+| Reaction Name           | Incorrect Reaction                   | Correct Reaction                       | Recommended Fuel Mixture       | Configuration        |
+|-------------------------|--------------------------------------|----------------------------------------|--------------------------------|----------------------|
+| Methane + Oxygen        | `2 CH₄ + O₂ → 6 CO₂ + 3 Pol`         | `CH₄ + 2 O₂ → CO₂ + 2 H₂O`             | 33% methane, 67% oxygen        | Always enabled.      |
+| Methane + Nitrous Oxide | `CH₄ + N₂O → 2 CO₂ + 2 N₂`           | `CH₄ + 4 N₂O → CO₂ + 2 H₂O + 4 N₂`     | 20% methane, 80% nitrous oxide | Enabled by default.  |
+| Methane + Ozone         | `3 CH₄ + 2 O₃ → 6 CO₂ + 3 Pol + H₂O` | `3 CH₄ + 4 O₃ → 3 CO₂ + 6 H₂O`         | 42% methane, 58% ozone         | Enabled by default.  |
+| Hydrogen + Oxygen       | `2 H₂ + O₂ → 3 H₂O`                  | `2 H₂ + O₂ → 2 H₂O`                    | 67% hydrogen, 33% oxygen       | Disabled by default. |
+| Hydrogen + Ozone        | `3 H₂ + O₃ → 4 H₂O`                  | `3 H₂ + O₃ → 3 H₂O`                    | 75% hydrogen, 25% ozone        | Disabled by default. |
+| Alcohol + Oxygen        | `Alc + 3 O₂ → 8 CO₂ + 2 H₂O`         | `C₂H₆O + 3 O₂ → 2 CO₂ + 3 H₂O`         | 25% alcohol, 75% oxygen        | Disabled by default. |
+| Alcohol + Nitrous Oxide | `Alc + 2 N₂O → 4 N₂ + 2 H₂O`         | `C₂H₆O + 6 N₂O → 2 CO₂ + 3 H₂O + 6 N₂` | 14% alcohol, 86% nitrous oxide | Disabled by default. |
+| Alcohol + Ozone         | `Alc + 2 O₃ → CO₂ + 3 H₂O`           | `C₂H₆O + 2 O₃ → 2 CO₂ + 3 H₂O`         | 33% alcohol, 67% ozone         | Disabled by default. |
 
 ## Optional Starting Fuel Mixture Fix
 
@@ -75,18 +36,6 @@ The vanilla game's data-driven spawn recipes use a fuel ratio of 67% methane and
 When `PatchStartingFuelMixtures` is enabled, the mod recognizes every exact 2:1 methane/oxygen mixture while spawn data is loaded and changes it to 1:2 while preserving the total quantity and pressure. This covers the built-in fuel tank, fuel packages, starting and tutorial welders, creative spawn-menu entries, and compatible custom spawn data. A custom jetpack fuel canister is covered too; the vanilla jetpack currently starts with nitrogen.
 
 Enabled by default. It can be disabled in the mod configuration. The corrected recipes affect only equipment spawned afterward, so existing tanks and saved contents are not changed. Restart the game after changing this setting.
-
-## Notes
-
-* The mod does not modify save files, so it can be safely enabled or disabled at any time.
-* Applies corrections at the reaction-definition level, so fuel allocation, consumption, and exhaust calculations use consistent stoichiometry. A correctly mixed welder therefore leaves no unburned fuel.
-* Tested with the Gas Fuel Generator (GFG). Combustion reaches the expected 90% ratio.
-
-## Requirements
-
-This mod is a BepInEx plugin. It requires BepInEx with the [StationeersLaunchPad](https://github.com/StationeersLaunchPad/StationeersLaunchPad) plugin to be installed. See the StationeersLaunchPad repository for the detailed install guide.
-
-BepInEx only loads plugins from its own `BepInEx/plugins` folder, while subscribed Workshop mods live in Steam's workshop content folder. StationeersLaunchPad is the loader that bridges the two: it discovers the subscribed mod and hands its assembly to BepInEx. Without a loader, a subscribed-only mod is downloaded but never loaded.
 
 ## Installing the Mod (for Players)
 
