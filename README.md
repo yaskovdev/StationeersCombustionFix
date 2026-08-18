@@ -77,6 +77,10 @@ The mod exposes the following BepInEx settings (section `General`):
 
 The methane + oxygen patch is always applied and cannot be disabled. You can toggle the optional patches in the StationeersLaunchPad configuration window at startup, or by editing the generated `<GameDir>\BepInEx\config\StationeersCombustionFix.cfg` file.
 
+## Furnace Ice Ratio
+
+Use **45 Volatile Ice : 82 Oxite** (`1 : 1.8222`) for an exact mix: each Volatile Ice needs `20 × 2 + 2 × ½ = 41 mol O₂`, while each Oxite supplies `22.5 mol O₂`. A smaller practical batch is **17 Volatile Ice : 31 Oxite**, leaving only `0.5 mol O₂` unused.
+
 ## Setting Up the Project
 
 The project requires a reference to `Assembly-CSharp.dll` from your local Stationeers installation. This file is not included in the repository.
