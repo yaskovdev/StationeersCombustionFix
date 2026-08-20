@@ -16,7 +16,7 @@ BepInEx only loads plugins from its own `BepInEx/plugins` folder, while subscrib
 
 ## Combustion Reaction Fixes
 
-Hydrogen and alcohol reactions are experimental and disabled by default. Alcohol is treated as ethanol (`C₂H₆O`).
+Hydrogen and alcohol reactions are experimental and disabled by default. Alcohol is treated as ethanol (`C₂H₆O`). The hydrogen + nitrous oxide reaction is already correct in vanilla and therefore is not patched.
 
 | Reaction Name           | Incorrect Reaction                   | Correct Reaction                       | Recommended Fuel Mixture       | Configuration        |
 |-------------------------|--------------------------------------|----------------------------------------|--------------------------------|----------------------|

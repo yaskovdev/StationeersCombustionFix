@@ -9,7 +9,7 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 internal static class StartingFuelMixture
 {
     /// <summary>
-    /// Permanently corrects matching recipes throughout a deserialized spawn-data tree before the game initializes
+    /// Corrects matching recipes throughout a deserialized spawn-data tree before the game initializes
     /// them. For vanilla data, this is equivalent to changing
     /// <c>Stationeers\rocketstation_Data\StreamingAssets\Data\startconditions.xml</c> in memory, so subsequent tooltips
     /// and spawned contents are both derived from the corrected recipes.
@@ -38,7 +38,7 @@ internal static class StartingFuelMixture
 
     private static List<ActionData>? CreateCorrectedActions(IReadOnlyList<ActionData> actions)
     {
-        var mixture = FindMethaneMixture(actions);
+        var mixture = MatchMethaneOxygenMixture(actions);
 
         if (mixture == default)
         {
@@ -74,7 +74,10 @@ internal static class StartingFuelMixture
         return null;
     }
 
-    private static (GasAction Methane, GasAction Oxygen) FindMethaneMixture(IReadOnlyList<ActionData> actions)
+    /// <summary>
+    /// Returns the methane and oxygen actions when they are the only gas actions; otherwise, returns <see langword="default"/>.
+    /// </summary>
+    private static (GasAction Methane, GasAction Oxygen) MatchMethaneOxygenMixture(IReadOnlyList<ActionData> actions)
     {
         var gasActions = actions.OfType<GasAction>().ToArray();
         var methane = gasActions.FirstOrDefault(it => it.Type == GasType.Methane);
