@@ -57,7 +57,7 @@ Recommended fuel mixture: 42% methane, 58% ozone.
 Enabled by default. Can be disabled in the StationeersLaunchPad configuration window or in BepInEx/config/StationeersCombustionFix.cfg (BepInEx is located in the game folder, e.g. C:\Program Files (x86)\Steam\steamapps\common\Stationeers).
 
 [h2]Starting Fuel Mixture Fix[/h2]
-Some vanilla and custom starting conditions provide fuel tanks with 67% methane and 33% oxygen. With the corrected reaction, this mixture leaves methane unburned and can ignite oxygen-rich surroundings.
+Both vanilla and custom starting conditions can provide fuel tanks with 67% methane and 33% oxygen. With the corrected reaction, this mixture leaves methane unburned and can ignite oxygen-rich surroundings.
 
 By default, the mod changes exact 2:1 methane/oxygen mixtures to the correct 1:2 ratio without changing the total amount of gas or its pressure. This applies to built-in fuel tanks, fuel packages, starting and tutorial welders, creative spawn-menu entries, and compatible custom starting equipment.
 
