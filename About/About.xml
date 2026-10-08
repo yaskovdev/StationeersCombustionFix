@@ -57,15 +57,17 @@ Recommended fuel mixture: 42% methane, 58% ozone.
 
 Enabled by default.
 
+[h2]Experimental: Hydrogen and Alcohol[/h2]
+The mod also corrects the hydrogen and alcohol combustion reactions. Alcohol is treated as ethanol (C2H6O).
+
+Disabled by default.
+
 [h2]Starting Fuel Mixture Fix[/h2]
 Both vanilla and custom starting conditions can provide fuel tanks with 67% methane and 33% oxygen. With the corrected reaction, this mixture leaves methane unburned and can ignite oxygen-rich surroundings.
 
 By default, the mod changes exact 2:1 methane/oxygen mixtures to the correct 1:2 ratio without changing the total amount of gas or its pressure. This applies to built-in fuel tanks, fuel packages, starting and tutorial welders, creative spawn-menu entries, and compatible custom starting equipment.
 
 The fix affects only newly spawned equipment. Existing tanks and saved contents remain unchanged. Restart the game after changing this setting.
-
-[h2]Experimental: Hydrogen and Alcohol[/h2]
-The mod also corrects the hydrogen and alcohol combustion reactions. Alcohol is treated as ethanol (C2H6O). These are experimental and disabled by default.
 
 [h2]Feedback[/h2]
 Contributions, improvements, suggestions, and comments are welcome.
